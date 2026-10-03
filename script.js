@@ -282,6 +282,8 @@ function desenharSim() {
         ctx.ellipse(x, o.y + 1, o.tam * 0.45, o.tam * 0.12, 0, 0, Math.PI * 2);
         ctx.fill();
       }
+      // emoji colorido usa o alfa do fillStyle: sem isso herdaria a transparência da sombra
+      ctx.fillStyle = "#000";
       ctx.font = o.tam + "px serif";
       ctx.save();
       ctx.translate(x, o.y - o.tam / 2);
