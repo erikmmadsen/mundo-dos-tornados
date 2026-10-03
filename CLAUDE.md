@@ -8,7 +8,7 @@ Site estático em português (pt-BR), "Mundo dos Tornados": explica como os torn
 - `style.css`: estilos.
 - `script.js`: dados (categorias, tornados históricos, fotos, perguntas), simulador e a renderização das seções.
 - `radar.js`: seção `#radar`, previsão real de 3 dias (chuva, vento, CAPE) via Open-Meteo, desenhada sobre mapa Leaflet (CDN cdnjs, tiles Esri Light Gray, sem chave; CARTO e OSM não servem: pedem chave/referer). Precisa de internet.
-- `imagens/`: `supercelula.webp`, `tornado-campo.jpg`, `tornado-formacao.webp`.
+- `imagens/`: `supercelula.webp`, `tornado-campo.jpg`, `tornado-formacao.webp` e `galeria/` (26 fotos reais de tornados em WebP, máx. 1600 px, ~3,5 MB; autores e licenças em `imagens/CREDITOS.md`).
 
 ## Convenções
 
@@ -27,6 +27,7 @@ Site estático em português (pt-BR), "Mundo dos Tornados": explica como os torn
 - Branch `feat/erikmm_correcoes-ui_20261003` (a partir da branch do radar): **correções de UI da revisão de design.** Texto escuro nos botões EF0–EF3 (contraste) e sem opacidade; menu hambúrguer no celular; Curiosidades sem o bug de flex (texto em `<p>`) e sem emoji de bandeira (não renderiza no Windows); legenda do radar com mín/máx nas pontas da barra. **Ainda não incorporada à `main`.**
 - Branch `feat/erikmm_radar-simulador-melhorias_20261003`: **melhorias do radar e do simulador.** O simulador agora fica dentro da seção Categorias: um único seletor EF0–EF5 controla detalhes e simulação (o link do menu "Simulador" aponta para `#simulador`, um `<h3>`). Botão Pausar e respeito a `prefers-reduced-motion`; emojis escalam em telas estreitas. Radar: interpolação suave, bordas esmaecidas, grade de ~110 km, risco em 4 níveis (Baixo/Atenção/Moderado/Alto, por CAPE e rajada) e horário do pico de chuva e vento por dia. **Ainda não incorporada à `main`.**
 - Branch `feat/erikmm_acessibilidade-acabamento_20261003`: **acessibilidade e acabamento.** Foco visível (`:focus-visible`), `aria-live` no quiz e no status do radar, rótulos nos campos do radar, `prefers-reduced-motion` no CSS, favicon (SVG inline), ícone do menu maior, números do hero em grade, aviso quando o Leaflet/CDN não carrega e remoção do arquivo vazio `teste`. **Ainda não incorporada à `main`.**
+- Branch `feat/erikmm_galeria-30-fotos-reais_20261003` (a partir da branch do radar): **galeria com 26 fotos reais** do Wikimedia Commons (tornados em voo, F/EF, trombas-d'água, nuvem-parede, casos do Brasil e danos), 1600 px WebP, com crédito na legenda e em `imagens/CREDITOS.md`. **Ainda não incorporada à `main`.**
 
 ### Estado das branches
 
@@ -41,5 +42,6 @@ Site estático em português (pt-BR), "Mundo dos Tornados": explica como os torn
 | `feat/erikmm_correcoes-ui_20261003` | + correções de UI (contraste, menu mobile, curiosidades) | não |
 | `feat/erikmm_radar-simulador-melhorias_20261003` | + simulador unificado, pausa, radar suave, risco em 4 níveis | não |
 | `feat/erikmm_acessibilidade-acabamento_20261003` | + acessibilidade, favicon, hero, sem `teste` | não |
+| `feat/erikmm_galeria-30-fotos-reais_20261003` | tudo acima + galeria com 26 fotos reais | não |
 
 Atualizar esta seção a cada nova alteração.

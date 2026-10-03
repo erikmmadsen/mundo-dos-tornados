@@ -354,7 +354,35 @@ historia.forEach(function (ev) {
 const fotos = [
   { arquivo: "tornado-campo.jpg", legenda: "Tornado em campo aberto" },
   { arquivo: "tornado-formacao.webp", legenda: "Como um tornado se forma" },
-  { arquivo: "supercelula.webp", legenda: "Estrutura de uma nuvem supercélula" }
+  { arquivo: "supercelula.webp", legenda: "Estrutura de uma nuvem supercélula" },
+  { arquivo: "galeria/tornado-landspout-lamar-co.webp", legenda: "Landspout (tornado sem supercélula) — Lamar, Colorado, EUA, 2023", credito: "Stefan Klein, CC BY-SA 4.0" },
+  { arquivo: "galeria/tornado-ef0-alasca.webp", legenda: "Tornado EF0 — Rusty Point, Alasca, EUA, 2024", credito: "NWS Anchorage, domínio público" },
+  { arquivo: "galeria/tornado-ef4-solomon-ks.webp", legenda: "Tornado EF4 — Solomon, Kansas, EUA, 2016", credito: "Ks0stm, CC BY 4.0" },
+  { arquivo: "galeria/tornado-ef2-estufa-dodge-city.webp", legenda: "Tornado em forma de “cano de fogão” — Dodge City, Kansas, EUA", credito: "Lane Pearman, CC BY 2.0" },
+  { arquivo: "galeria/tornado-f5-elie-manitoba.webp", legenda: "Tornado F5 de Elie — Manitoba, Canadá, 2007", credito: "Justin Hobson. Original upload, CC BY 2.5" },
+  { arquivo: "galeria/tornado-contraluz-noaa.webp", legenda: "Funil e tornado em contraluz — acervo NOAA", credito: "Acervo oficial (NOAA/NWS), domínio público" },
+  { arquivo: "galeria/tornado-alfalfa-noaa.webp", legenda: "Tornado de Alfalfa, Oklahoma — acervo NOAA", credito: "Acervo oficial (NOAA/NWS), domínio público" },
+  { arquivo: "galeria/tornado-f3-cheyenne-1977.webp", legenda: "Tornado F3 — Cheyenne, Wyoming, EUA, 1977", credito: "Unknown authorUnknown author, domínio público" },
+  { arquivo: "galeria/tornado-f5-moore-1999.webp", legenda: "Tornado F5 — Moore, Oklahoma, EUA, 1999", credito: "Mike Eilts, National Severe St, domínio público" },
+  { arquivo: "galeria/tornado-doran-2010.webp", legenda: "Tornado de Doran, Minnesota, EUA, 2010", credito: "Steve Lyons, domínio público" },
+  { arquivo: "galeria/tornado-f5-wichita-1964.webp", legenda: "Tornado F5 — Condado de Wichita, Texas, EUA, 1964", credito: "Unknown authorUnknown author, domínio público" },
+  { arquivo: "galeria/tornado-f4-warner-robins-1953.webp", legenda: "Tornado F4 — Warner Robins, Geórgia, EUA, 1953", credito: "Ernest Bostelmann, domínio público" },
+  { arquivo: "galeria/tornado-ef5-enderlin-2025.webp", legenda: "Tornado EF5 — Enderlin, Dakota do Norte, EUA, 2025", credito: "Celton Henderson, CC BY-SA 4.0" },
+  { arquivo: "galeria/tornado-ef5-moore-2013.webp", legenda: "Tornado EF5 — Moore, Oklahoma, EUA, 2013", credito: "Ks0stm, CC BY-SA 3.0" },
+  { arquivo: "galeria/tornado-ef3-martinsburg-2023.webp", legenda: "Tornado EF3 — Martinsburg, Iowa, EUA, 2023", credito: "Omaha Tornado Chaser, domínio público" },
+  { arquivo: "galeria/tornado-brasil-taquarituba-2013.webp", legenda: "Tornado em Taquarituba, São Paulo, Brasil, 2013", credito: "Jose Reynaldo da Fonseca, CC BY-SA 3.0" },
+  { arquivo: "galeria/tornado-f3-goderich-2011.webp", legenda: "Tornado F3 — Goderich, Ontário, Canadá, 2011", credito: "PhotoJunkie!, CC BY 2.0" },
+  { arquivo: "galeria/tornado-barrie.webp", legenda: "Tornado em Barrie, Ontário, Canadá", credito: "Duckdave, CC BY-SA 4.0" },
+  { arquivo: "galeria/tornado-tromba-dagua-dupla.webp", legenda: "Tromba-d'água dupla", credito: "GollyGforce - Living My Worst Nightmare, CC BY 2.0" },
+  { arquivo: "galeria/tornado-nuvem-funil-noaa.webp", legenda: "Nuvem-funil descendo em direção ao solo — acervo NOAA", credito: "Acervo oficial (NOAA/NWS), domínio público" },
+  { arquivo: "galeria/tornado-nuvem-funil-vortex.webp", legenda: "Nuvem-funil — projeto VORTEX, 1994", credito: "Unknown VORTEX project member., domínio público" },
+  { arquivo: "galeria/tornado-vortex2-2009.webp", legenda: "Tornado — projeto VORTEX2, 2009", credito: "John Oakland, CIMSS.
+
+Credit: VORTEX II., domínio público" },
+  { arquivo: "galeria/tornado-nuvem-parede-noaa.webp", legenda: "Nuvem-parede em rotação — NOAA, 1976", credito: "OAR/ERL/National Severe Storms Laborator, domínio público" },
+  { arquivo: "galeria/tornado-dano-f4-pirai.webp", legenda: "Árvores destruídas por tornado F4 — Piraí do Sul, Brasil", credito: "Ado LM, CC BY-SA 4.0" },
+  { arquivo: "galeria/tornado-dano-ef5-arvore.webp", legenda: "Árvore sem casca após tornado EF5 — El Reno, EUA", credito: "Runningonbrains, CC BY-SA 3.0" },
+  { arquivo: "galeria/tornado-dano-rio-bonito.webp", legenda: "Vegetação destruída por tornado — Rio Bonito do Iguaçu, Brasil", credito: "Roberto Dziura, CC0" }
 ];
 
 const fotosEl = document.getElementById("fotos");
@@ -371,13 +399,18 @@ fotos.forEach(function (f) {
   img.loading = "lazy";
   const legenda = document.createElement("figcaption");
   legenda.textContent = f.legenda;
+  if (f.credito) {
+    const credito = document.createElement("small");
+    credito.textContent = "Foto: " + f.credito;
+    legenda.appendChild(credito);
+  }
   fig.appendChild(img);
   fig.appendChild(legenda);
   // Clique abre a imagem em tela cheia
   fig.addEventListener("click", function () {
     ampliadaImg.src = img.src;
     ampliadaImg.alt = f.legenda;
-    ampliadaLegenda.textContent = f.legenda;
+    ampliadaLegenda.textContent = f.credito ? f.legenda + " (Foto: " + f.credito + ")" : f.legenda;
     ampliadaEl.hidden = false;
   });
   fotosEl.appendChild(fig);

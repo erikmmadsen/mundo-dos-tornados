@@ -173,6 +173,7 @@ figcaption { font-size: 0.85rem; color: var(--cinza); margin-top: 6px; }
 .foto:hover { transform: translateY(-4px); box-shadow: 0 8px 20px rgba(15, 27, 45, 0.15); }
 .foto img { width: 100%; height: 190px; object-fit: cover; display: block; }
 .foto figcaption { padding: 10px 14px; font-size: 0.95rem; color: var(--texto); }
+.foto figcaption small { display: block; margin-top: 4px; font-size: 0.75rem; opacity: 0.7; }
 
 .ampliada {
   position: fixed; inset: 0; z-index: 50; background: rgba(5, 10, 20, 0.92);
