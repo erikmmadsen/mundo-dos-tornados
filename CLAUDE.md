@@ -22,6 +22,7 @@ Site estático em português (pt-BR), "Mundo dos Tornados": explica como os torn
 - `e603bd4`: **Versão inicial do appTornado.** Site com menu, hero, seção "O que é um tornado?", categorias EF0 a EF5 clicáveis, linha do tempo de tornados históricos (1925 a 2015), galeria com ampliação, quiz e curiosidades. Está na `main`, marcada com a tag `v0-snapshot-20261003` (também na branch `feat/erikmm_snapshot-versao-atual_20261003`).
 - `ccaa7a9`: **Simulador de destruição por categoria (EF0 a EF5).** Nova seção `#simulador` com `<canvas>`: o usuário escolhe a categoria e vê o tornado puxando do chão os objetos que ele consegue levar (o EF0 só leva coisas leves). Inclui link no menu e estilos `.sim-canvas`. Está na branch `feat/erikmm_simulador-destruicao_20261003`, **ainda não incorporada à `main`**.
 - Branch `feat/erikmm_claude-md-historico_20261003`: criação deste `CLAUDE.md`.
+- Branch `feat/erikmm_tornado-cone-radar_20261003` (criada a partir da branch do simulador, que ela depende): **tornado realista e radar meteorológico.** O funil agora é um cone invertido com curvatura, faixas girando, nuvem-parede, chuva e poeira na base. Ao lado do simulador há um radar (`#radar-canvas`) com varredura, anéis de distância, chuva fraca, núcleo da tempestade, eco em gancho e marcador de tornado que acompanha o tornado da cena; a intensidade muda com a categoria. Inclui a cópia do `CLAUDE.md`. **Ainda não incorporada à `main`.**
 
 ### Estado das branches
 
@@ -31,5 +32,6 @@ Site estático em português (pt-BR), "Mundo dos Tornados": explica como os torn
 | `feat/erikmm_snapshot-versao-atual_20261003` | snapshot da versão inicial (mesmo commit da `main`) | sim |
 | `feat/erikmm_simulador-destruicao_20261003` | simulador de destruição | não |
 | `feat/erikmm_claude-md-historico_20261003` | `CLAUDE.md` | não |
+| `feat/erikmm_tornado-cone-radar_20261003` | simulador + `CLAUDE.md` + tornado em cone + radar | não |
 
 Atualizar esta seção a cada nova alteração.

@@ -67,8 +67,18 @@
       <h2>Simulador de destruição</h2>
       <p>Escolha a categoria e veja o que o tornado consegue puxar do chão. O EF0 só leva coisas leves.</p>
       <div id="sim-botoes" class="cards"></div>
-      <canvas id="sim-canvas" class="sim-canvas" width="900" height="400"
-              aria-label="Simulação de um tornado puxando objetos do chão"></canvas>
+      <div class="sim-grade">
+        <canvas id="sim-canvas" class="sim-canvas" width="900" height="400"
+                aria-label="Simulação de um tornado puxando objetos do chão"></canvas>
+        <div class="radar-caixa">
+          <canvas id="radar-canvas" class="radar-canvas" width="320" height="320"
+                  aria-label="Radar meteorológico mostrando a tempestade e o tornado"></canvas>
+          <div class="radar-legenda">
+            <span>dBZ</span><div class="radar-barra"></div><span>20</span><span>65</span>
+          </div>
+          <p id="radar-info" class="radar-info"></p>
+        </div>
+      </div>
       <div id="sim-info" class="detalhe"></div>
     </section>
 

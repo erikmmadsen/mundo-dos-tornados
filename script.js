@@ -149,28 +149,233 @@ function atualizarSim() {
   });
 }
 
+// Funil em forma de cone invertido: largo no topo (t = 0) e estreito no chão (t = 1)
+const TOPO_FUNIL = 58;
+const BASE_FUNIL = CHAO + 25;
+
+function larguraFunil(t) {
+  const larguraBase = 6 + nivelSim * 3;
+  const larguraTopo = raioDoTornado() * 0.95;
+  return larguraBase + (larguraTopo - larguraBase) * Math.pow(1 - t, 1.7);
+}
+
+// Centro do funil em cada altura: balança no alto e se curva perto do chão
+function centroFunil(t) {
+  return tornado.x +
+    Math.sin(tornado.tempo / 35 + t * 3) * 14 * (1 - t) +
+    Math.sin(tornado.tempo / 90) * 26 * t * t;
+}
+
+function desenharNuvem() {
+  // base escura da supercélula, com várias camadas
+  for (let k = -5; k <= 5; k++) {
+    const x = tornado.x + k * 62 + Math.sin(tornado.tempo / 70 + k) * 6;
+    const y = 22 + Math.abs(k) * 5;
+    ctx.fillStyle = "rgba(" + (38 + Math.abs(k) * 4) + ", " + (46 + Math.abs(k) * 4) + ", 58, 0.95)";
+    ctx.beginPath();
+    ctx.ellipse(x, y, 82, 28, 0, 0, Math.PI * 2);
+    ctx.fill();
+  }
+  // nuvem-parede (wall cloud) logo acima do funil
+  ctx.fillStyle = "rgba(30, 36, 46, 0.95)";
+  ctx.beginPath();
+  ctx.ellipse(tornado.x, 52, larguraFunil(0) * 0.9 + 20, 14, 0, 0, Math.PI * 2);
+  ctx.fill();
+  // chuva ao redor do funil
+  ctx.strokeStyle = "rgba(60, 75, 95, 0.35)";
+  ctx.lineWidth = 1;
+  for (let i = 0; i < 40; i++) {
+    const rx = tornado.x + ((i * 53 + tornado.tempo * 3) % 360) - 180;
+    const ry = 60 + ((i * 37 + tornado.tempo * 9) % (CHAO - 50));
+    ctx.beginPath();
+    ctx.moveTo(rx, ry);
+    ctx.lineTo(rx - 4, ry + 14);
+    ctx.stroke();
+  }
+}
+
 function desenharTornado() {
-  const raio = raioDoTornado();
-  const topo = 30;
-  const camadas = 22;
-  for (let i = 0; i <= camadas; i++) {
-    const t = i / camadas;                         // 0 = topo, 1 = chão
-    const y = topo + t * (CHAO + 30 - topo);
-    const largura = raio * (1.1 - t * 0.85) + 8;
-    const balanco = Math.sin(tornado.tempo / 20 + t * 5) * 10 * (1 - t);
-    const x = tornado.x + balanco;
-    ctx.fillStyle = "rgba(70, 80, 90, " + (0.18 + (1 - t) * 0.1) + ")";
+  desenharNuvem();
+
+  const passos = 40;
+  const esq = [];
+  const dir = [];
+  for (let i = 0; i <= passos; i++) {
+    const t = i / passos;
+    const y = TOPO_FUNIL + t * (BASE_FUNIL - TOPO_FUNIL);
+    const c = centroFunil(t);
+    const w = larguraFunil(t);
+    esq.push([c - w, y]);
+    dir.push([c + w, y]);
+  }
+
+  // contorno do cone
+  ctx.save();
+  ctx.beginPath();
+  esq.forEach(function (p, i) { if (i === 0) ctx.moveTo(p[0], p[1]); else ctx.lineTo(p[0], p[1]); });
+  for (let i = passos; i >= 0; i--) ctx.lineTo(dir[i][0], dir[i][1]);
+  ctx.closePath();
+
+  const grad = ctx.createLinearGradient(0, TOPO_FUNIL, 0, BASE_FUNIL);
+  grad.addColorStop(0, "rgba(55, 62, 72, 0.95)");
+  grad.addColorStop(0.6, "rgba(95, 104, 114, 0.9)");
+  grad.addColorStop(1, "rgba(130, 120, 105, 0.9)");
+  ctx.fillStyle = grad;
+  ctx.fill();
+  ctx.clip();
+
+  // faixas girando, dão a sensação de rotação
+  for (let k = 0; k < 16; k++) {
+    const t = (k + (tornado.tempo * 0.06) % 1) / 16;
+    const y = TOPO_FUNIL + t * (BASE_FUNIL - TOPO_FUNIL);
+    const w = larguraFunil(t);
+    const c = centroFunil(t);
+    ctx.strokeStyle = "rgba(200, 210, 220, " + (0.1 + 0.18 * Math.pow(Math.sin(k * 1.7 + tornado.tempo / 8), 2)) + ")";
+    ctx.lineWidth = 2;
     ctx.beginPath();
-    ctx.ellipse(x, y, largura, 9, 0, 0, Math.PI * 2);
+    ctx.ellipse(c, y, w, 4 + w * 0.08, 0, 0.1 * Math.PI, 0.9 * Math.PI);
+    ctx.stroke();
+  }
+  // sombra nas laterais, para dar volume
+  const lado = ctx.createLinearGradient(tornado.x - raioDoTornado(), 0, tornado.x + raioDoTornado(), 0);
+  lado.addColorStop(0, "rgba(10, 14, 20, 0.45)");
+  lado.addColorStop(0.5, "rgba(10, 14, 20, 0)");
+  lado.addColorStop(1, "rgba(10, 14, 20, 0.45)");
+  ctx.fillStyle = lado;
+  ctx.fillRect(0, TOPO_FUNIL, LARGURA, BASE_FUNIL - TOPO_FUNIL);
+  ctx.restore();
+
+  // nuvem de poeira e entulho na base
+  const bx = centroFunil(1);
+  for (let i = 0; i < 9; i++) {
+    const a = tornado.tempo / 10 + i * 0.7;
+    const r = 16 + nivelSim * 6 + (i % 3) * 8;
+    ctx.fillStyle = "rgba(120, 100, 75, " + (0.22 + (i % 3) * 0.06) + ")";
+    ctx.beginPath();
+    ctx.ellipse(bx + Math.cos(a) * r * 1.3, BASE_FUNIL - 6 + Math.sin(a) * 5 - (i % 3) * 5,
+      r, r * 0.45, 0, 0, Math.PI * 2);
     ctx.fill();
   }
-  // nuvem de tempestade
-  ctx.fillStyle = "rgba(50, 58, 68, 0.9)";
-  for (let k = -3; k <= 3; k++) {
-    ctx.beginPath();
-    ctx.ellipse(tornado.x + k * 55, 28 + Math.abs(k) * 4, 70, 26, 0, 0, Math.PI * 2);
-    ctx.fill();
+}
+
+// ---------- Radar meteorológico ----------
+const radarCanvas = document.getElementById("radar-canvas");
+const radarCtx = radarCanvas.getContext("2d");
+const radarInfoEl = document.getElementById("radar-info");
+const RC = radarCanvas.width / 2;      // centro e raio do radar
+let radarAng = 0;
+
+// chuva fraca espalhada (posições fixas em relação ao radar)
+const chuvaFraca = [];
+for (let i = 0; i < 14; i++) {
+  chuvaFraca.push({
+    x: RC + (Math.random() - 0.5) * RC * 1.6,
+    y: RC + (Math.random() - 0.5) * RC * 1.6,
+    r: 18 + Math.random() * 26,
+    cor: Math.random() < 0.7 ? "#4ade80" : "#22c55e"
+  });
+}
+
+function manchaRadar(x, y, r, cor, alfa) {
+  const g = radarCtx.createRadialGradient(x, y, 0, x, y, r);
+  g.addColorStop(0, cor);
+  g.addColorStop(1, "rgba(0, 0, 0, 0)");
+  radarCtx.globalAlpha = alfa;
+  radarCtx.fillStyle = g;
+  radarCtx.beginPath();
+  radarCtx.arc(x, y, r, 0, Math.PI * 2);
+  radarCtx.fill();
+  radarCtx.globalAlpha = 1;
+}
+
+function desenharRadar() {
+  const c = radarCtx;
+  c.fillStyle = "#04140a";
+  c.fillRect(0, 0, radarCanvas.width, radarCanvas.height);
+
+  // posição do tornado no radar acompanha o tornado da cena
+  const tx = RC - 70 + (tornado.x / LARGURA) * 140;
+  const ty = RC - 50;
+  const forca = 0.7 + nivelSim * 0.12;
+
+  c.save();
+  c.beginPath();
+  c.arc(RC, RC, RC - 2, 0, Math.PI * 2);
+  c.clip();
+
+  // chuva fraca e tempestade
+  chuvaFraca.forEach(function (m) { manchaRadar(m.x, m.y, m.r, m.cor, 0.45); });
+  manchaRadar(tx + 12, ty - 22, 62 * forca, "#22c55e", 0.8);
+  manchaRadar(tx + 10, ty - 20, 46 * forca, "#facc15", 0.85);
+  manchaRadar(tx + 8, ty - 16, 30 * forca, "#f97316", 0.9);
+  manchaRadar(tx + 6, ty - 12, 18 * forca, "#ef4444", 0.95);
+
+  // eco em gancho (hook echo): a curva típica de uma supercélula com tornado
+  c.lineCap = "round";
+  c.strokeStyle = "#ef4444";
+  c.lineWidth = 7 * forca;
+  c.beginPath();
+  c.arc(tx + 4, ty + 2, 11 * forca, -Math.PI / 2, Math.PI * 0.7);
+  c.stroke();
+  c.strokeStyle = "#d946ef";
+  c.lineWidth = 3 * forca;
+  c.beginPath();
+  c.arc(tx + 4, ty + 2, 11 * forca, -Math.PI / 4, Math.PI * 0.6);
+  c.stroke();
+
+  // marcador de assinatura de tornado, pisca
+  if (Math.floor(tornado.tempo / 20) % 2 === 0) {
+    c.fillStyle = "#fff";
+    c.beginPath();
+    c.moveTo(tx, ty - 7);
+    c.lineTo(tx - 7, ty + 6);
+    c.lineTo(tx + 7, ty + 6);
+    c.closePath();
+    c.fill();
   }
+
+  // varredura do radar, com rastro
+  for (let i = 0; i < 26; i++) {
+    const a = radarAng - i * 0.035;
+    c.fillStyle = "rgba(110, 255, 140, " + (0.2 * (1 - i / 26)) + ")";
+    c.beginPath();
+    c.moveTo(RC, RC);
+    c.arc(RC, RC, RC, a - 0.035, a);
+    c.closePath();
+    c.fill();
+  }
+
+  // anéis de distância e eixos
+  c.strokeStyle = "rgba(110, 255, 140, 0.3)";
+  c.lineWidth = 1;
+  [0.33, 0.66, 1].forEach(function (f) {
+    c.beginPath();
+    c.arc(RC, RC, (RC - 2) * f, 0, Math.PI * 2);
+    c.stroke();
+  });
+  c.beginPath();
+  c.moveTo(RC, 0); c.lineTo(RC, RC * 2);
+  c.moveTo(0, RC); c.lineTo(RC * 2, RC);
+  c.stroke();
+  c.restore();
+
+  c.fillStyle = "#9fe8b0";
+  c.font = "12px sans-serif";
+  c.textAlign = "center";
+  c.textBaseline = "middle";
+  c.fillText("N", RC, 12);
+  c.fillText("S", RC, RC * 2 - 12);
+  c.fillText("L", RC * 2 - 12, RC);
+  c.fillText("O", 12, RC);
+
+  radarAng += 0.045;
+}
+
+function mostrarInfoRadar() {
+  const cat = categorias[nivelSim];
+  radarInfoEl.innerHTML =
+    "<strong>Eco em gancho detectado.</strong> Vento estimado: " + cat.vento + ". " +
+    "O triângulo branco marca a assinatura do tornado.";
 }
 
 function desenharSim() {
@@ -196,6 +401,8 @@ function desenharSim() {
       ctx.fillText(o.emoji, 0, 0);
       ctx.restore();
     });
+
+  desenharRadar();
 }
 
 let loopRodando = false;
@@ -230,6 +437,7 @@ categorias.forEach(function (cat, i) {
     nivelSim = i;
     criarObjetos();
     mostrarInfoSim();
+    mostrarInfoRadar();
     if (!animando) desenharSim();
   });
   simBotoesEl.appendChild(b);
@@ -238,6 +446,7 @@ categorias.forEach(function (cat, i) {
 criarObjetos();
 simBotoesEl.firstChild.classList.add("ativo");
 mostrarInfoSim();
+mostrarInfoRadar();
 desenharSim();
 
 // Só anima enquanto o simulador aparece na tela
