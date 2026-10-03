@@ -102,20 +102,38 @@ figcaption { font-size: 0.85rem; color: var(--cinza); margin-top: 6px; }
 .detalhe p { margin: 4px 0; }
 
 /* Simulador */
-.sim-grade { display: grid; grid-template-columns: 2fr 1fr; gap: 16px; margin-top: 16px; align-items: start; }
-@media (max-width: 760px) { .sim-grade { grid-template-columns: 1fr; } }
+.sim-grade { margin-top: 16px; }
 .sim-canvas {
   display: block; width: 100%; height: auto; border-radius: 10px;
   border: 1px solid var(--borda); background: #b9c6d3;
 }
-.radar-caixa { background: #04140a; border-radius: 10px; padding: 10px; color: #9fe8b0; }
-.radar-canvas { display: block; width: 100%; height: auto; border-radius: 50%; }
-.radar-legenda { display: flex; align-items: center; gap: 6px; margin-top: 8px; font-size: 0.75rem; }
-.radar-barra {
-  flex: 1; height: 8px; border-radius: 4px;
-  background: linear-gradient(90deg, #4ade80, #22c55e, #facc15, #f97316, #ef4444, #d946ef);
+
+/* Radar do tempo */
+.radar-busca { display: flex; flex-wrap: wrap; gap: 8px; margin: 14px 0 6px; }
+.radar-busca input {
+  flex: 1 1 220px; padding: 11px 14px; font-size: 1rem;
+  border: 2px solid var(--borda); border-radius: 8px;
 }
-.radar-info { margin: 8px 0 0; font-size: 0.85rem; line-height: 1.4; }
+.radar-busca .proxima { margin-top: 0; }
+.radar-status { color: var(--cinza); margin: 6px 0; min-height: 1.6em; }
+.radar-abas { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 10px; }
+.radar-aba {
+  padding: 8px 16px; border: 2px solid var(--borda); border-radius: 20px;
+  background: white; cursor: pointer; font-size: 0.95rem;
+}
+.radar-aba.ativo { background: var(--azul); border-color: var(--azul); color: white; }
+.radar-mapa { height: 420px; border-radius: 10px; border: 1px solid var(--borda); z-index: 0; }
+.radar-controle { display: flex; align-items: center; gap: 12px; margin-top: 12px; flex-wrap: wrap; }
+.radar-controle .proxima { margin-top: 0; min-width: 48px; }
+.radar-controle input { flex: 1 1 200px; }
+.radar-legenda { display: flex; align-items: center; gap: 8px; margin-top: 10px; font-size: 0.85rem; color: var(--cinza); }
+.radar-barra { flex: 0 1 260px; height: 10px; border-radius: 5px; }
+.radar-resumo { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; }
+.radar-dia { background: var(--azul-claro); border-radius: 10px; padding: 14px 16px; border-left: 6px solid var(--azul); }
+.radar-dia h4 { margin: 0 0 6px; }
+.radar-dia p { margin: 3px 0; font-size: 0.95rem; }
+.radar-aviso { font-size: 0.85rem; color: var(--cinza); margin-top: 16px; }
+.seta-vento { font-size: 18px; line-height: 18px; text-align: center; color: #fff; text-shadow: 0 0 3px #000, 0 0 3px #000; }
 
 /* Linha do tempo */
 #linha-do-tempo { border-left: 3px solid var(--borda); margin-left: 8px; }

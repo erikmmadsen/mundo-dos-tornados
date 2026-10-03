@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="Tudo sobre tornados: como se formam, categorias da escala Fujita, tornados históricos e quiz.">
   <title>Mundo dos Tornados</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -15,6 +16,7 @@
       <a href="#o-que-e">O que é</a>
       <a href="#categorias">Categorias</a>
       <a href="#simulador">Simulador</a>
+      <a href="#radar">Radar</a>
       <a href="#historia">História</a>
       <a href="#galeria">Galeria</a>
       <a href="#quiz">Quiz</a>
@@ -70,16 +72,41 @@
       <div class="sim-grade">
         <canvas id="sim-canvas" class="sim-canvas" width="900" height="400"
                 aria-label="Simulação de um tornado puxando objetos do chão"></canvas>
-        <div class="radar-caixa">
-          <canvas id="radar-canvas" class="radar-canvas" width="320" height="320"
-                  aria-label="Radar meteorológico mostrando a tempestade e o tornado"></canvas>
-          <div class="radar-legenda">
-            <span>dBZ</span><div class="radar-barra"></div><span>20</span><span>65</span>
-          </div>
-          <p id="radar-info" class="radar-info"></p>
-        </div>
       </div>
       <div id="sim-info" class="detalhe"></div>
+    </section>
+
+    <section id="radar">
+      <h2>Radar do tempo: previsão de 3 dias</h2>
+      <p>
+        Previsão real de chuva, vento e energia de tempestade para a região escolhida, hora a hora.
+        Dados do modelo Open-Meteo.
+      </p>
+      <div class="radar-busca">
+        <input id="radar-cidade" type="text" placeholder="Digite uma cidade (ex.: Xanxerê)">
+        <button id="radar-buscar" class="proxima">Buscar</button>
+        <button id="radar-local" class="proxima">📍 Minha localização</button>
+      </div>
+      <p id="radar-status" class="radar-status">Carregando previsão...</p>
+      <div class="radar-abas" id="radar-abas"></div>
+      <div id="radar-mapa" class="radar-mapa"></div>
+      <div class="radar-controle">
+        <button id="radar-play" class="proxima" aria-label="Reproduzir">▶</button>
+        <input id="radar-hora" type="range" min="0" max="71" value="0">
+        <strong id="radar-hora-txt"></strong>
+      </div>
+      <div class="radar-legenda">
+        <span id="radar-unidade"></span>
+        <div id="radar-barra" class="radar-barra"></div>
+        <span id="radar-min"></span><span id="radar-max"></span>
+      </div>
+      <h3>Resumo dos próximos dias</h3>
+      <div id="radar-resumo" class="radar-resumo"></div>
+      <p class="radar-aviso">
+        Isto é uma previsão de modelo, não o eco de um radar real. Tornados não podem ser previstos com
+        3 dias de antecedência: aqui mostramos apenas sinais de tempestade forte (CAPE e rajadas).
+        Em caso de alerta, siga a Defesa Civil.
+      </p>
     </section>
 
     <section id="historia">
@@ -119,6 +146,8 @@
     <p><strong>Mundo dos Tornados</strong> · Projeto de estudo · Dados aproximados.</p>
   </footer>
 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
   <script src="script.js"></script>
+  <script src="radar.js"></script>
 </body>
 </html>

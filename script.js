@@ -258,126 +258,6 @@ function desenharTornado() {
   }
 }
 
-// ---------- Radar meteorológico ----------
-const radarCanvas = document.getElementById("radar-canvas");
-const radarCtx = radarCanvas.getContext("2d");
-const radarInfoEl = document.getElementById("radar-info");
-const RC = radarCanvas.width / 2;      // centro e raio do radar
-let radarAng = 0;
-
-// chuva fraca espalhada (posições fixas em relação ao radar)
-const chuvaFraca = [];
-for (let i = 0; i < 14; i++) {
-  chuvaFraca.push({
-    x: RC + (Math.random() - 0.5) * RC * 1.6,
-    y: RC + (Math.random() - 0.5) * RC * 1.6,
-    r: 18 + Math.random() * 26,
-    cor: Math.random() < 0.7 ? "#4ade80" : "#22c55e"
-  });
-}
-
-function manchaRadar(x, y, r, cor, alfa) {
-  const g = radarCtx.createRadialGradient(x, y, 0, x, y, r);
-  g.addColorStop(0, cor);
-  g.addColorStop(1, "rgba(0, 0, 0, 0)");
-  radarCtx.globalAlpha = alfa;
-  radarCtx.fillStyle = g;
-  radarCtx.beginPath();
-  radarCtx.arc(x, y, r, 0, Math.PI * 2);
-  radarCtx.fill();
-  radarCtx.globalAlpha = 1;
-}
-
-function desenharRadar() {
-  const c = radarCtx;
-  c.fillStyle = "#04140a";
-  c.fillRect(0, 0, radarCanvas.width, radarCanvas.height);
-
-  // posição do tornado no radar acompanha o tornado da cena
-  const tx = RC - 70 + (tornado.x / LARGURA) * 140;
-  const ty = RC - 50;
-  const forca = 0.7 + nivelSim * 0.12;
-
-  c.save();
-  c.beginPath();
-  c.arc(RC, RC, RC - 2, 0, Math.PI * 2);
-  c.clip();
-
-  // chuva fraca e tempestade
-  chuvaFraca.forEach(function (m) { manchaRadar(m.x, m.y, m.r, m.cor, 0.45); });
-  manchaRadar(tx + 12, ty - 22, 62 * forca, "#22c55e", 0.8);
-  manchaRadar(tx + 10, ty - 20, 46 * forca, "#facc15", 0.85);
-  manchaRadar(tx + 8, ty - 16, 30 * forca, "#f97316", 0.9);
-  manchaRadar(tx + 6, ty - 12, 18 * forca, "#ef4444", 0.95);
-
-  // eco em gancho (hook echo): a curva típica de uma supercélula com tornado
-  c.lineCap = "round";
-  c.strokeStyle = "#ef4444";
-  c.lineWidth = 7 * forca;
-  c.beginPath();
-  c.arc(tx + 4, ty + 2, 11 * forca, -Math.PI / 2, Math.PI * 0.7);
-  c.stroke();
-  c.strokeStyle = "#d946ef";
-  c.lineWidth = 3 * forca;
-  c.beginPath();
-  c.arc(tx + 4, ty + 2, 11 * forca, -Math.PI / 4, Math.PI * 0.6);
-  c.stroke();
-
-  // marcador de assinatura de tornado, pisca
-  if (Math.floor(tornado.tempo / 20) % 2 === 0) {
-    c.fillStyle = "#fff";
-    c.beginPath();
-    c.moveTo(tx, ty - 7);
-    c.lineTo(tx - 7, ty + 6);
-    c.lineTo(tx + 7, ty + 6);
-    c.closePath();
-    c.fill();
-  }
-
-  // varredura do radar, com rastro
-  for (let i = 0; i < 26; i++) {
-    const a = radarAng - i * 0.035;
-    c.fillStyle = "rgba(110, 255, 140, " + (0.2 * (1 - i / 26)) + ")";
-    c.beginPath();
-    c.moveTo(RC, RC);
-    c.arc(RC, RC, RC, a - 0.035, a);
-    c.closePath();
-    c.fill();
-  }
-
-  // anéis de distância e eixos
-  c.strokeStyle = "rgba(110, 255, 140, 0.3)";
-  c.lineWidth = 1;
-  [0.33, 0.66, 1].forEach(function (f) {
-    c.beginPath();
-    c.arc(RC, RC, (RC - 2) * f, 0, Math.PI * 2);
-    c.stroke();
-  });
-  c.beginPath();
-  c.moveTo(RC, 0); c.lineTo(RC, RC * 2);
-  c.moveTo(0, RC); c.lineTo(RC * 2, RC);
-  c.stroke();
-  c.restore();
-
-  c.fillStyle = "#9fe8b0";
-  c.font = "12px sans-serif";
-  c.textAlign = "center";
-  c.textBaseline = "middle";
-  c.fillText("N", RC, 12);
-  c.fillText("S", RC, RC * 2 - 12);
-  c.fillText("L", RC * 2 - 12, RC);
-  c.fillText("O", 12, RC);
-
-  radarAng += 0.045;
-}
-
-function mostrarInfoRadar() {
-  const cat = categorias[nivelSim];
-  radarInfoEl.innerHTML =
-    "<strong>Eco em gancho detectado.</strong> Vento estimado: " + cat.vento + ". " +
-    "O triângulo branco marca a assinatura do tornado.";
-}
-
 function desenharSim() {
   ctx.clearRect(0, 0, LARGURA, ALTURA);
   ctx.fillStyle = "#a9b8c7";
@@ -394,6 +274,14 @@ function desenharSim() {
     .sort(function (a, b) { return a.base - b.base; })
     .forEach(function (o) {
       const x = o.x + (o.tremor ? (Math.random() - 0.5) * o.tremor * 2 : 0);
+      ctx.globalAlpha = 1;
+      // sombra no chão, para o objeto parecer sólido
+      if (o.estado === "chao") {
+        ctx.fillStyle = "rgba(0, 0, 0, 0.3)";
+        ctx.beginPath();
+        ctx.ellipse(x, o.y + 1, o.tam * 0.45, o.tam * 0.12, 0, 0, Math.PI * 2);
+        ctx.fill();
+      }
       ctx.font = o.tam + "px serif";
       ctx.save();
       ctx.translate(x, o.y - o.tam / 2);
@@ -402,7 +290,6 @@ function desenharSim() {
       ctx.restore();
     });
 
-  desenharRadar();
 }
 
 let loopRodando = false;
@@ -437,7 +324,6 @@ categorias.forEach(function (cat, i) {
     nivelSim = i;
     criarObjetos();
     mostrarInfoSim();
-    mostrarInfoRadar();
     if (!animando) desenharSim();
   });
   simBotoesEl.appendChild(b);
@@ -446,7 +332,6 @@ categorias.forEach(function (cat, i) {
 criarObjetos();
 simBotoesEl.firstChild.classList.add("ativo");
 mostrarInfoSim();
-mostrarInfoRadar();
 desenharSim();
 
 // Só anima enquanto o simulador aparece na tela
