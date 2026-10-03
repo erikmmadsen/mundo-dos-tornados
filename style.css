@@ -19,6 +19,10 @@ body {
   line-height: 1.65;
 }
 
+/* Foco visível para quem navega pelo teclado */
+:focus-visible { outline: 3px solid var(--destaque); outline-offset: 2px; }
+.opcao:focus-visible, .proxima:focus-visible { outline-color: var(--azul); }
+
 /* Menu */
 .menu {
   position: sticky; top: 0; z-index: 10;
@@ -28,6 +32,7 @@ body {
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
 }
 .marca { color: white; font-weight: 700; text-decoration: none; font-size: 1.1rem; }
+.marca-icone { font-size: 1.5rem; vertical-align: middle; }
 .links a {
   color: #c5d3e3; text-decoration: none; margin-left: 16px; font-size: 0.95rem;
   padding-bottom: 2px; border-bottom: 2px solid transparent;
@@ -55,11 +60,12 @@ body {
 .botao:hover { transform: translateY(-2px); }
 
 .hero-numeros {
-  display: flex; justify-content: center; flex-wrap: wrap; gap: 16px; margin-top: 44px;
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 16px;
+  max-width: 760px; margin: 44px auto 0;
 }
 .hero-numeros div {
   background: rgba(255, 255, 255, 0.08); border: 1px solid rgba(255, 255, 255, 0.15);
-  border-radius: 12px; padding: 16px 26px; min-width: 190px;
+  border-radius: 12px; padding: 16px 26px;
 }
 .hero-numeros strong { display: block; font-size: 1.8rem; color: var(--destaque); }
 .hero-numeros span { font-size: 0.9rem; color: #c5d3e3; }
@@ -203,3 +209,8 @@ figcaption { font-size: 0.85rem; color: var(--cinza); margin-top: 6px; }
 
 footer { background: var(--escuro); color: #aab7c4; text-align: center; padding: 24px; }
 footer p { margin: 0; }
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  * { transition: none !important; }
+}

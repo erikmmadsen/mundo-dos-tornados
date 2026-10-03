@@ -5,13 +5,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="Tudo sobre tornados: como se formam, categorias da escala Fujita, tornados históricos e quiz.">
   <title>Mundo dos Tornados</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27%3E%3Ctext y=%27.9em%27 font-size=%2790%27%3E%F0%9F%8C%AA%EF%B8%8F%3C/text%3E%3C/svg%3E">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
   <nav class="menu">
-    <a class="marca" href="#topo">🌪️ Mundo dos Tornados</a>
+    <a class="marca" href="#topo"><span class="marca-icone" aria-hidden="true">🌪️</span> Mundo dos Tornados</a>
     <button id="menu-botao" class="menu-botao" aria-label="Abrir menu" aria-expanded="false" aria-controls="menu-links">☰</button>
     <div class="links" id="menu-links">
       <a href="#o-que-e">O que é</a>
@@ -79,16 +80,16 @@
         Dados do modelo Open-Meteo.
       </p>
       <div class="radar-busca">
-        <input id="radar-cidade" type="text" placeholder="Digite uma cidade (ex.: Xanxerê)">
+        <input id="radar-cidade" type="text" aria-label="Cidade para a previsão" placeholder="Digite uma cidade (ex.: Xanxerê)">
         <button id="radar-buscar" class="proxima">Buscar</button>
         <button id="radar-local" class="proxima">📍 Minha localização</button>
       </div>
-      <p id="radar-status" class="radar-status">Carregando previsão...</p>
+      <p id="radar-status" class="radar-status" role="status" aria-live="polite">Carregando previsão...</p>
       <div class="radar-abas" id="radar-abas"></div>
       <div id="radar-mapa" class="radar-mapa"></div>
       <div class="radar-controle">
         <button id="radar-play" class="proxima" aria-label="Reproduzir">▶</button>
-        <input id="radar-hora" type="range" min="0" max="71" value="0">
+        <input id="radar-hora" type="range" aria-label="Hora da previsão" min="0" max="71" value="0">
         <strong id="radar-hora-txt"></strong>
       </div>
       <div class="radar-legenda">
@@ -119,7 +120,7 @@
 
     <section id="quiz">
       <h2>Quiz: você sabe tudo sobre tornados?</h2>
-      <div id="quiz-caixa"></div>
+      <div id="quiz-caixa" aria-live="polite"></div>
     </section>
 
     <section id="curiosidades">

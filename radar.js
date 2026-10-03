@@ -311,4 +311,6 @@ document.getElementById("radar-local").addEventListener("click", function () {
 });
 
 // Começa em Xanxerê (SC), cidade atingida por um tornado em 2015
-buscarPrevisao(-26.877, -52.404, "Xanxerê - Santa Catarina");
+if (typeof L === "undefined") {
+  radarStatusEl.textContent = "Não foi possível carregar o mapa. Verifique a internet e recarregue a página.";
+} else buscarPrevisao(-26.877, -52.404, "Xanxerê - Santa Catarina");
