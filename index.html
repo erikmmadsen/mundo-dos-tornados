@@ -12,7 +12,8 @@
 
   <nav class="menu">
     <a class="marca" href="#topo">🌪️ Mundo dos Tornados</a>
-    <div class="links">
+    <button id="menu-botao" class="menu-botao" aria-label="Abrir menu" aria-expanded="false" aria-controls="menu-links">☰</button>
+    <div class="links" id="menu-links">
       <a href="#o-que-e">O que é</a>
       <a href="#categorias">Categorias</a>
       <a href="#simulador">Simulador</a>
@@ -97,8 +98,9 @@
       </div>
       <div class="radar-legenda">
         <span id="radar-unidade"></span>
+        <span id="radar-min"></span>
         <div id="radar-barra" class="radar-barra"></div>
-        <span id="radar-min"></span><span id="radar-max"></span>
+        <span id="radar-max"></span>
       </div>
       <h3>Resumo dos próximos dias</h3>
       <div id="radar-resumo" class="radar-resumo"></div>
@@ -128,10 +130,10 @@
     <section id="curiosidades">
       <h2>Curiosidades</h2>
       <ul class="curiosidades">
-        <li><span>🌎</span> Os Estados Unidos têm mais tornados do que qualquer outro país, cerca de 1.200 por ano.</li>
-        <li><span>💨</span> O vento mais rápido já medido na Terra foi de cerca de 484 km/h, dentro de um tornado em 1999.</li>
-        <li><span>🇧🇷</span> O Brasil também tem tornados, principalmente no Sul. Em 2015, um tornado atingiu Xanxerê (SC).</li>
-        <li><span>🌀</span> Quando o tornado passa sobre a água, ele se chama <strong>tromba-d'água</strong>.</li>
+        <li><span>🌎</span><p>Os Estados Unidos têm mais tornados do que qualquer outro país, cerca de 1.200 por ano.</p></li>
+        <li><span>💨</span><p>O vento mais rápido já medido na Terra foi de cerca de 484 km/h, dentro de um tornado em 1999.</p></li>
+        <li><span>📍</span><p>O Brasil também tem tornados, principalmente no Sul. Em 2015, um tornado atingiu Xanxerê (SC).</p></li>
+        <li><span>🌀</span><p>Quando o tornado passa sobre a água, ele se chama <strong>tromba-d'água</strong>.</p></li>
       </ul>
     </section>
 

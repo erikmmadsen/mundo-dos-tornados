@@ -1,16 +1,16 @@
 // Dados das categorias (Escala Fujita Melhorada)
 const categorias = [
-  { nome: "EF0", vento: "105 a 137 km/h", cor: "#27ae60", dano: "Fraco",
+  { nome: "EF0", texto: "#0f1b2d", vento: "105 a 137 km/h", cor: "#27ae60", dano: "Fraco",
     efeito: "Quebra galhos de árvores e derruba placas." },
-  { nome: "EF1", vento: "138 a 177 km/h", cor: "#2ecc71", dano: "Moderado",
+  { nome: "EF1", texto: "#0f1b2d", vento: "138 a 177 km/h", cor: "#2ecc71", dano: "Moderado",
     efeito: "Arranca telhas e pode virar carros pequenos." },
-  { nome: "EF2", vento: "178 a 217 km/h", cor: "#f1c40f", dano: "Considerável",
+  { nome: "EF2", texto: "#0f1b2d", vento: "178 a 217 km/h", cor: "#f1c40f", dano: "Considerável",
     efeito: "Destrói telhados e derruba árvores grandes." },
-  { nome: "EF3", vento: "218 a 266 km/h", cor: "#e67e22", dano: "Severo",
+  { nome: "EF3", texto: "#0f1b2d", vento: "218 a 266 km/h", cor: "#e67e22", dano: "Severo",
     efeito: "Derruba paredes de casas e vira trens." },
-  { nome: "EF4", vento: "267 a 322 km/h", cor: "#e74c3c", dano: "Devastador",
+  { nome: "EF4", texto: "#ffffff", vento: "267 a 322 km/h", cor: "#e74c3c", dano: "Devastador",
     efeito: "Destrói casas bem construídas e joga carros longe." },
-  { nome: "EF5", vento: "mais de 322 km/h", cor: "#8e44ad", dano: "Incrível",
+  { nome: "EF5", texto: "#ffffff", vento: "mais de 322 km/h", cor: "#8e44ad", dano: "Incrível",
     efeito: "Destrói quase tudo. É raríssimo!" }
 ];
 
@@ -41,6 +41,7 @@ categorias.forEach(function (cat) {
   botao.className = "card";
   botao.textContent = cat.nome;
   botao.style.background = cat.cor;
+  botao.style.color = cat.texto;
   botao.addEventListener("click", function () {
     listaEl.querySelectorAll(".card").forEach(function (c) { c.classList.remove("ativo"); });
     botao.classList.add("ativo");
@@ -320,6 +321,7 @@ categorias.forEach(function (cat, i) {
   b.className = "card";
   b.textContent = cat.nome;
   b.style.background = cat.cor;
+  b.style.color = cat.texto;
   b.addEventListener("click", function () {
     simBotoesEl.querySelectorAll(".card").forEach(function (c) { c.classList.remove("ativo"); });
     b.classList.add("ativo");
@@ -456,3 +458,18 @@ function mostrarPergunta() {
 }
 
 mostrarPergunta();
+
+// ---------- Menu no celular ----------
+const menuBotao = document.getElementById("menu-botao");
+const menuLinks = document.getElementById("menu-links");
+
+menuBotao.addEventListener("click", function () {
+  const aberto = menuLinks.classList.toggle("aberto");
+  menuBotao.setAttribute("aria-expanded", aberto);
+});
+menuLinks.addEventListener("click", function (e) {
+  if (e.target.tagName === "A") {
+    menuLinks.classList.remove("aberto");
+    menuBotao.setAttribute("aria-expanded", "false");
+  }
+});

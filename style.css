@@ -78,7 +78,19 @@ h2 {
 }
 
 .duas-colunas { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; align-items: center; }
-@media (max-width: 760px) { .duas-colunas { grid-template-columns: 1fr; } .links a { margin: 0 10px 0 0; } }
+@media (max-width: 760px) { .duas-colunas { grid-template-columns: 1fr; } }
+
+/* Botão do menu (só no celular) */
+.menu-botao {
+  display: none; background: none; border: 1px solid #3b4d66; border-radius: 8px;
+  color: white; font-size: 1.3rem; padding: 4px 12px; cursor: pointer;
+}
+@media (max-width: 760px) {
+  .menu-botao { display: block; }
+  .links { display: none; width: 100%; flex-direction: column; }
+  .links.aberto { display: flex; }
+  .links a { margin: 0; padding: 10px 0; border-bottom: 1px solid #22344d; }
+}
 
 .figura { margin: 0; }
 .figura img { width: 100%; border-radius: 10px; display: block; }
@@ -89,10 +101,10 @@ figcaption { font-size: 0.85rem; color: var(--cinza); margin-top: 6px; }
 .card {
   flex: 1 1 110px; border: none; border-radius: 10px; padding: 16px 10px;
   color: white; font-size: 1.15rem; font-weight: 700; cursor: pointer;
-  transition: transform 0.15s, box-shadow 0.15s; opacity: 0.8;
+  transition: transform 0.15s, box-shadow 0.15s;
 }
-.card:hover { transform: translateY(-3px); opacity: 1; }
-.card.ativo { opacity: 1; box-shadow: 0 0 0 3px var(--escuro); }
+.card:hover { transform: translateY(-3px); }
+.card.ativo { box-shadow: 0 0 0 3px var(--escuro); }
 
 .detalhe {
   margin-top: 18px; padding: 18px 20px; background: var(--azul-claro);
@@ -187,6 +199,7 @@ figcaption { font-size: 0.85rem; color: var(--cinza); margin-top: 6px; }
   background: var(--azul-claro); border-radius: 10px;
 }
 .curiosidades li span { font-size: 1.5rem; }
+.curiosidades li p { margin: 0; }
 
 footer { background: var(--escuro); color: #aab7c4; text-align: center; padding: 24px; }
 footer p { margin: 0; }

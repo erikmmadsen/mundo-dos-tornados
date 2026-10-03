@@ -25,6 +25,7 @@ Site estático em português (pt-BR), "Mundo dos Tornados": explica como os torn
 - Branch `feat/erikmm_claude-md-historico_20261003`: criação deste `CLAUDE.md`.
 - Branch `feat/erikmm_tornado-cone-radar_20261003` (criada a partir da branch do simulador, que ela depende): **tornado realista e radar meteorológico.** O funil agora é um cone invertido com curvatura, faixas girando, nuvem-parede, chuva e poeira na base. Ao lado do simulador há um radar (`#radar-canvas`) com varredura, anéis de distância, chuva fraca, núcleo da tempestade, eco em gancho e marcador de tornado que acompanha o tornado da cena; a intensidade muda com a categoria. Inclui a cópia do `CLAUDE.md`. **Ainda não incorporada à `main`.**
 - Branch `feat/erikmm_radar-previsao-3dias_20261003` (a partir da branch do cone): **radar meteorológico real.** Substitui o radar de mentira do simulador (removido) por uma seção `#radar` com previsão real de 3 dias do Open-Meteo: busca de cidade ou localização, mapa, camadas de chuva, vento (rajadas e setas) e energia de tempestade (CAPE), controle de hora com play e resumo por dia com nível de risco. Também deixa os objetos do simulador (casas etc.) sólidos, com sombra no chão. Começa em Xanxerê (SC). Funil, nuvem e poeira do simulador são opacos (sem rgba). Atenção: emoji no canvas herda o alfa do `fillStyle`; por isso o `fillStyle` é resetado para `#000` antes do `fillText` (senão as casas ficam transparentes). **Ainda não incorporada à `main`.**
+- Branch `feat/erikmm_correcoes-ui_20261003` (a partir da branch do radar): **correções de UI da revisão de design.** Texto escuro nos botões EF0–EF3 (contraste) e sem opacidade; menu hambúrguer no celular; Curiosidades sem o bug de flex (texto em `<p>`) e sem emoji de bandeira (não renderiza no Windows); legenda do radar com mín/máx nas pontas da barra. **Ainda não incorporada à `main`.**
 
 ### Estado das branches
 
@@ -36,5 +37,6 @@ Site estático em português (pt-BR), "Mundo dos Tornados": explica como os torn
 | `feat/erikmm_claude-md-historico_20261003` | `CLAUDE.md` | não |
 | `feat/erikmm_tornado-cone-radar_20261003` | simulador + `CLAUDE.md` + tornado em cone + radar de mentira | não |
 | `feat/erikmm_radar-previsao-3dias_20261003` | tudo acima, com o radar real de previsão no lugar do falso | não |
+| `feat/erikmm_correcoes-ui_20261003` | + correções de UI (contraste, menu mobile, curiosidades) | não |
 
 Atualizar esta seção a cada nova alteração.
