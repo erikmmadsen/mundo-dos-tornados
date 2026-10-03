@@ -36,21 +36,13 @@ const historia = [
 const listaEl = document.getElementById("lista-categorias");
 const detalheEl = document.getElementById("detalhe-categoria");
 
-categorias.forEach(function (cat) {
+categorias.forEach(function (cat, i) {
   const botao = document.createElement("button");
   botao.className = "card";
   botao.textContent = cat.nome;
   botao.style.background = cat.cor;
   botao.style.color = cat.texto;
-  botao.addEventListener("click", function () {
-    listaEl.querySelectorAll(".card").forEach(function (c) { c.classList.remove("ativo"); });
-    botao.classList.add("ativo");
-    detalheEl.style.borderLeftColor = cat.cor;
-    detalheEl.innerHTML =
-      "<h3>" + cat.nome + " – Dano " + cat.dano + "</h3>" +
-      "<p>💨 <strong>Vento:</strong> " + cat.vento + "</p>" +
-      "<p>🏚️ <strong>O que acontece:</strong> " + cat.efeito + "</p>";
-  });
+  botao.addEventListener("click", function () { selecionarCategoria(i); });
   listaEl.appendChild(botao);
 });
 
@@ -71,8 +63,7 @@ const coisas = [
   { emoji: "🏢", nivel: 4, tam: 64, qtd: 2 }
 ];
 
-const simBotoesEl = document.getElementById("sim-botoes");
-const simInfoEl = document.getElementById("sim-info");
+const simPausaEl = document.getElementById("sim-pausa");
 const canvas = document.getElementById("sim-canvas");
 const ctx = canvas.getContext("2d");
 const LARGURA = canvas.width;
@@ -84,6 +75,7 @@ let nivelSim = 0;
 let objetos = [];
 let tornado = { x: LARGURA / 2, tempo: 0 };
 let animando = false;
+let pausado = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
 function criarObjetos() {
   objetos = [];
@@ -270,6 +262,8 @@ function desenharSim() {
 
   ctx.textAlign = "center";
   ctx.textBaseline = "middle";
+  // em telas estreitas o canvas é reduzido pelo CSS; aumentamos os objetos para continuarem legíveis
+  const escala = Math.min(1.8, Math.max(1, 700 / (canvas.clientWidth || LARGURA)));
   objetos
     .slice()
     .sort(function (a, b) { return a.base - b.base; })
@@ -280,68 +274,66 @@ function desenharSim() {
       if (o.estado === "chao") {
         ctx.fillStyle = "rgba(0, 0, 0, 0.3)";
         ctx.beginPath();
-        ctx.ellipse(x, o.y + 1, o.tam * 0.45, o.tam * 0.12, 0, 0, Math.PI * 2);
+        ctx.ellipse(x, o.y + 1, o.tam * escala * 0.45, o.tam * escala * 0.12, 0, 0, Math.PI * 2);
         ctx.fill();
       }
       // emoji colorido usa o alfa do fillStyle: sem isso herdaria a transparência da sombra
       ctx.fillStyle = "#000";
-      ctx.font = o.tam + "px serif";
+      const tam = o.tam * escala;
+      ctx.font = tam + "px serif";
       ctx.save();
-      ctx.translate(x, o.y - o.tam / 2);
+      ctx.translate(x, o.y - tam / 2);
       ctx.rotate(o.giro);
       ctx.fillText(o.emoji, 0, 0);
       ctx.restore();
     });
-
 }
 
 let loopRodando = false;
 function loopSim() {
-  if (!animando) { loopRodando = false; return; }
+  if (!animando || pausado) { loopRodando = false; return; }
   loopRodando = true;
   atualizarSim();
   desenharSim();
   requestAnimationFrame(loopSim);
 }
 
-function mostrarInfoSim() {
-  const cat = categorias[nivelSim];
-  const levanta = coisas.filter(function (c) { return c.nivel <= nivelSim; })
+function selecionarCategoria(i) {
+  const cat = categorias[i];
+  nivelSim = i;
+  listaEl.querySelectorAll(".card").forEach(function (c, k) { c.classList.toggle("ativo", k === i); });
+  const levanta = coisas.filter(function (c) { return c.nivel <= i; })
     .map(function (c) { return c.emoji; });
-  simInfoEl.style.borderLeftColor = cat.cor;
-  simInfoEl.innerHTML =
+  detalheEl.style.borderLeftColor = cat.cor;
+  detalheEl.innerHTML =
     "<h3>" + cat.nome + " – Dano " + cat.dano + "</h3>" +
     "<p>💨 <strong>Vento:</strong> " + cat.vento + "</p>" +
-    "<p>🌪️ <strong>Puxa do chão:</strong> " + levanta.join(" ") + "</p>" +
-    "<p>🏚️ <strong>O que acontece:</strong> " + cat.efeito + "</p>";
+    "<p>🏚️ <strong>O que acontece:</strong> " + cat.efeito + "</p>" +
+    "<p>🌪️ <strong>Puxa do chão:</strong> " + levanta.join(" ") + "</p>";
+  canvas.setAttribute("aria-label", "Simulação de um tornado " + cat.nome +
+    " puxando do chão: " + levanta.length + " tipos de objetos");
+  criarObjetos();
+  if (!animando || pausado) desenharSim();
 }
 
-categorias.forEach(function (cat, i) {
-  const b = document.createElement("button");
-  b.className = "card";
-  b.textContent = cat.nome;
-  b.style.background = cat.cor;
-  b.style.color = cat.texto;
-  b.addEventListener("click", function () {
-    simBotoesEl.querySelectorAll(".card").forEach(function (c) { c.classList.remove("ativo"); });
-    b.classList.add("ativo");
-    nivelSim = i;
-    criarObjetos();
-    mostrarInfoSim();
-    if (!animando) desenharSim();
-  });
-  simBotoesEl.appendChild(b);
+function atualizarBotaoPausa() {
+  simPausaEl.textContent = pausado ? "▶ Continuar" : "⏸ Pausar";
+}
+
+simPausaEl.addEventListener("click", function () {
+  pausado = !pausado;
+  atualizarBotaoPausa();
+  if (!pausado && animando && !loopRodando) loopSim();
 });
 
 criarObjetos();
-simBotoesEl.firstChild.classList.add("ativo");
-mostrarInfoSim();
-desenharSim();
+atualizarBotaoPausa();
+selecionarCategoria(0);
 
 // Só anima enquanto o simulador aparece na tela
 new IntersectionObserver(function (entradas) {
   animando = entradas[0].isIntersecting;
-  if (animando && !loopRodando) loopSim();
+  if (animando && !pausado && !loopRodando) loopSim();
 }).observe(canvas);
 
 // Mostra a linha do tempo

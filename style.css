@@ -114,9 +114,9 @@ figcaption { font-size: 0.85rem; color: var(--cinza); margin-top: 6px; }
 .detalhe p { margin: 4px 0; }
 
 /* Simulador */
-.sim-grade { margin-top: 16px; }
+.subtitulo { margin: 28px 0 6px; font-size: 1.25rem; color: var(--escuro); }
 .sim-canvas {
-  display: block; width: 100%; height: auto; border-radius: 10px;
+  display: block; width: 100%; height: auto; border-radius: 10px; margin-top: 10px;
   border: 1px solid var(--borda); background: #b9c6d3;
 }
 

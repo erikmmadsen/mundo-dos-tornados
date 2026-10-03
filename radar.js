@@ -3,7 +3,7 @@
 // da cidade e desenhamos a previsão hora a hora sobre um mapa.
 
 const GRADE = 7;            // 7 x 7 pontos
-const PASSO = 0.8;          // graus entre pontos (cerca de 90 km)
+const PASSO = 1.0;          // graus entre pontos (cerca de 110 km)
 const HORAS = 72;           // 3 dias
 
 const radarStatusEl = document.getElementById("radar-status");
@@ -99,14 +99,15 @@ function valorNaGrade(campo, hora, x, y) {
   // x, y em [0, GRADE - 1]; interpolação bilinear entre os 4 pontos vizinhos
   const x0 = Math.min(Math.floor(x), GRADE - 2);
   const y0 = Math.min(Math.floor(y), GRADE - 2);
-  const fx = x - x0;
-  const fy = y - y0;
+  // interpolação suave (cosseno), evita o aspecto quadriculado
+  const fx = (1 - Math.cos((x - x0) * Math.PI)) / 2;
+  const fy = (1 - Math.cos((y - y0) * Math.PI)) / 2;
   function v(i, j) { return previsao.pontos[i * GRADE + j].h[campo][hora] || 0; }
   return v(y0, x0) * (1 - fx) * (1 - fy) + v(y0, x0 + 1) * fx * (1 - fy) +
     v(y0 + 1, x0) * (1 - fx) * fy + v(y0 + 1, x0 + 1) * fx * fy;
 }
 
-const RES = 96;
+const RES = 128;
 const canvasRadar = document.createElement("canvas");
 canvasRadar.width = RES;
 canvasRadar.height = RES;
@@ -121,7 +122,12 @@ function desenharHora(hora) {
       const cor = corDoValor(camadaAtual, v);
       const k = (py * RES + px) * 4;
       if (cor) {
-        img.data[k] = cor[0]; img.data[k + 1] = cor[1]; img.data[k + 2] = cor[2]; img.data[k + 3] = 170;
+        // transparência cresce com a intensidade e some perto das bordas da grade
+        const lim = camadaAtual.faixas[0][0];
+        const rampa = Math.min(1, (v - lim) / (lim * 1.5) + 0.25);
+        const borda = Math.min(1, Math.min(px, py, RES - 1 - px, RES - 1 - py) / (RES * 0.16));
+        img.data[k] = cor[0]; img.data[k + 1] = cor[1]; img.data[k + 2] = cor[2];
+        img.data[k + 3] = Math.round(185 * rampa * borda * borda);
       }
     }
   }
@@ -163,9 +169,18 @@ function horaAtual() {
 
 // ---- resumo por dia (ponto central da grade) ----
 function nivelDeRisco(cape, rajada) {
-  if (cape >= 1500 && rajada >= 60) return { texto: "⚠️ Alto: tempestades fortes possíveis", cor: "#e74c3c" };
-  if (cape >= 750 && rajada >= 40) return { texto: "🟠 Moderado", cor: "#e67e22" };
+  if (cape >= 2000 && rajada >= 70) return { texto: "⚠️ Alto: tempestades severas possíveis", cor: "#e74c3c" };
+  if (cape >= 1000 && rajada >= 60) return { texto: "🟠 Moderado: pancadas fortes", cor: "#e67e22" };
+  if (cape >= 500 && rajada >= 40) return { texto: "🟡 Atenção: instabilidade", cor: "#f1c40f" };
   return { texto: "🟢 Baixo", cor: "#27ae60" };
+}
+
+// hora (e valor) do maior valor de um campo dentro do dia
+function picoDoDia(campo, ini) {
+  const fatia = previsao.pontos[Math.floor(previsao.pontos.length / 2)].h[campo].slice(ini, ini + 24);
+  let melhor = 0;
+  fatia.forEach(function (v, i) { if (v > fatia[melhor]) melhor = i; });
+  return { valor: fatia[melhor] || 0, hora: ini + melhor };
 }
 
 function desenharResumo() {
@@ -180,6 +195,9 @@ function desenharResumo() {
     const rajada = Math.max.apply(null, fatia("wind_gusts_10m"));
     const cape = Math.max.apply(null, fatia("cape"));
     const risco = nivelDeRisco(cape, rajada);
+    const picoChuva = picoDoDia("precipitation", ini);
+    const picoRajada = picoDoDia("wind_gusts_10m", ini);
+    const hora = function (i) { return previsao.horas[i].slice(11, 13) + "h"; };
     const caixa = document.createElement("div");
     caixa.className = "radar-dia";
     caixa.style.borderLeftColor = risco.cor;
@@ -187,7 +205,8 @@ function desenharResumo() {
       "<h4>" + (d === 0 ? "Hoje" : d === 1 ? "Amanhã" : "Depois de amanhã") + " · " + formatarHora(previsao.horas[ini]).slice(0, 9) + "</h4>" +
       "<p>🌡️ " + Math.round(Math.min.apply(null, temp)) + "° a " + Math.round(Math.max.apply(null, temp)) + "°C</p>" +
       "<p>🌧️ Chuva: " + chuva.toFixed(1) + " mm</p>" +
-      "<p>💨 Rajada máxima: " + Math.round(rajada) + " km/h</p>" +
+      (picoChuva.valor >= 0.1 ? "<p>⏱️ Pico da chuva: " + hora(picoChuva.hora) + " (" + picoChuva.valor.toFixed(1) + " mm/h)</p>" : "") +
+      "<p>💨 Rajada máxima: " + Math.round(rajada) + " km/h às " + hora(picoRajada.hora) + "</p>" +
       "<p>⛈️ Risco de tempestade forte: " + risco.texto + "</p>";
     radarResumoEl.appendChild(caixa);
   }
