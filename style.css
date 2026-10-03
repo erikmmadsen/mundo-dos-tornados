@@ -101,6 +101,12 @@ figcaption { font-size: 0.85rem; color: var(--cinza); margin-top: 6px; }
 .detalhe h3 { margin: 0 0 8px; }
 .detalhe p { margin: 4px 0; }
 
+/* Simulador */
+.sim-canvas {
+  display: block; width: 100%; height: auto; margin-top: 16px; border-radius: 10px;
+  border: 1px solid var(--borda); background: #b9c6d3;
+}
+
 /* Linha do tempo */
 #linha-do-tempo { border-left: 3px solid var(--borda); margin-left: 8px; }
 .evento { position: relative; padding: 0 0 22px 24px; }

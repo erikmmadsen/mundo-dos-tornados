@@ -42,7 +42,7 @@ categorias.forEach(function (cat) {
   botao.textContent = cat.nome;
   botao.style.background = cat.cor;
   botao.addEventListener("click", function () {
-    document.querySelectorAll(".card").forEach(function (c) { c.classList.remove("ativo"); });
+    listaEl.querySelectorAll(".card").forEach(function (c) { c.classList.remove("ativo"); });
     botao.classList.add("ativo");
     detalheEl.style.borderLeftColor = cat.cor;
     detalheEl.innerHTML =
@@ -52,6 +52,199 @@ categorias.forEach(function (cat) {
   });
   listaEl.appendChild(botao);
 });
+
+// ---------- Simulador de destruição ----------
+// "nivel" é a menor categoria (0 = EF0) capaz de levantar o objeto.
+const coisas = [
+  { emoji: "🍃", nivel: 0, tam: 22, qtd: 8 },
+  { emoji: "🍂", nivel: 0, tam: 22, qtd: 6 },
+  { emoji: "📄", nivel: 0, tam: 20, qtd: 5 },
+  { emoji: "🛍️", nivel: 0, tam: 22, qtd: 4 },
+  { emoji: "🌿", nivel: 0, tam: 24, qtd: 4 },
+  { emoji: "🪧", nivel: 0, tam: 28, qtd: 3 },
+  { emoji: "🚲", nivel: 1, tam: 32, qtd: 3 },
+  { emoji: "🚗", nivel: 2, tam: 40, qtd: 3 },
+  { emoji: "🌳", nivel: 2, tam: 46, qtd: 3 },
+  { emoji: "🏠", nivel: 3, tam: 56, qtd: 3 },
+  { emoji: "🚂", nivel: 3, tam: 50, qtd: 1 },
+  { emoji: "🏢", nivel: 4, tam: 64, qtd: 2 }
+];
+
+const simBotoesEl = document.getElementById("sim-botoes");
+const simInfoEl = document.getElementById("sim-info");
+const canvas = document.getElementById("sim-canvas");
+const ctx = canvas.getContext("2d");
+const LARGURA = canvas.width;
+const ALTURA = canvas.height;
+const CHAO = 330;          // onde ficam as coisas (com profundidade de até 50px)
+const GRAVIDADE = 0.25;
+
+let nivelSim = 0;
+let objetos = [];
+let tornado = { x: LARGURA / 2, tempo: 0 };
+let animando = false;
+
+function criarObjetos() {
+  objetos = [];
+  coisas.forEach(function (c) {
+    for (let i = 0; i < c.qtd; i++) {
+      objetos.push({
+        emoji: c.emoji, nivel: c.nivel, tam: c.tam,
+        x: 30 + Math.random() * (LARGURA - 60),
+        base: CHAO + Math.random() * 50,
+        estado: "chao", ang: 0, raio: 0, alt: 0, subida: 0, vx: 0, vy: 0, y: 0, giro: 0
+      });
+    }
+  });
+  objetos.forEach(function (o) { o.y = o.base; });
+}
+
+function raioDoTornado() { return 70 + nivelSim * 18; }
+
+function atualizarSim() {
+  tornado.tempo++;
+  tornado.x = LARGURA / 2 + Math.sin(tornado.tempo / 260) * LARGURA * 0.38;
+  const raio = raioDoTornado();
+
+  objetos.forEach(function (o) {
+    if (o.estado === "chao") {
+      const dx = o.x - tornado.x;
+      o.tremor = 0;
+      if (Math.abs(dx) < raio) {
+        if (o.nivel <= nivelSim) {
+          o.estado = "subindo";
+          o.raio = Math.max(Math.abs(dx), 12);
+          o.ang = dx < 0 ? Math.PI : 0;
+          o.alt = 0;
+          o.subida = 1.2 + Math.random() * 1.2 - o.nivel * 0.1;
+          o.limite = 120 + Math.random() * 130;
+        } else {
+          o.tremor = 2;   // forte demais para levantar, só balança
+        }
+      }
+    } else if (o.estado === "subindo") {
+      o.ang += 0.12;
+      o.alt += o.subida;
+      o.giro += 0.2;
+      o.x = tornado.x + Math.cos(o.ang) * o.raio;
+      o.y = o.base - o.alt + Math.sin(o.ang) * o.raio * 0.15;
+      if (o.alt > o.limite) {
+        // solta o objeto para fora do tornado
+        o.estado = "voo";
+        o.vx = -Math.sin(o.ang) * 3 + (Math.random() - 0.5) * 2;
+        o.vy = -1 - Math.random() * 2;
+      }
+    } else if (o.estado === "voo") {
+      o.x += o.vx;
+      o.y += o.vy;
+      o.vy += GRAVIDADE;
+      o.giro += 0.15;
+      if (o.x < 10 || o.x > LARGURA - 10) o.vx *= -0.6;
+      if (o.y >= o.base) {
+        o.y = o.base;
+        o.estado = "chao";
+        o.giro = 0;
+      }
+    }
+  });
+}
+
+function desenharTornado() {
+  const raio = raioDoTornado();
+  const topo = 30;
+  const camadas = 22;
+  for (let i = 0; i <= camadas; i++) {
+    const t = i / camadas;                         // 0 = topo, 1 = chão
+    const y = topo + t * (CHAO + 30 - topo);
+    const largura = raio * (1.1 - t * 0.85) + 8;
+    const balanco = Math.sin(tornado.tempo / 20 + t * 5) * 10 * (1 - t);
+    const x = tornado.x + balanco;
+    ctx.fillStyle = "rgba(70, 80, 90, " + (0.18 + (1 - t) * 0.1) + ")";
+    ctx.beginPath();
+    ctx.ellipse(x, y, largura, 9, 0, 0, Math.PI * 2);
+    ctx.fill();
+  }
+  // nuvem de tempestade
+  ctx.fillStyle = "rgba(50, 58, 68, 0.9)";
+  for (let k = -3; k <= 3; k++) {
+    ctx.beginPath();
+    ctx.ellipse(tornado.x + k * 55, 28 + Math.abs(k) * 4, 70, 26, 0, 0, Math.PI * 2);
+    ctx.fill();
+  }
+}
+
+function desenharSim() {
+  ctx.clearRect(0, 0, LARGURA, ALTURA);
+  ctx.fillStyle = "#a9b8c7";
+  ctx.fillRect(0, 0, LARGURA, ALTURA);
+  ctx.fillStyle = "#6b8e4e";
+  ctx.fillRect(0, CHAO - 10, LARGURA, ALTURA - CHAO + 10);
+
+  desenharTornado();
+
+  ctx.textAlign = "center";
+  ctx.textBaseline = "middle";
+  objetos
+    .slice()
+    .sort(function (a, b) { return a.base - b.base; })
+    .forEach(function (o) {
+      const x = o.x + (o.tremor ? (Math.random() - 0.5) * o.tremor * 2 : 0);
+      ctx.font = o.tam + "px serif";
+      ctx.save();
+      ctx.translate(x, o.y - o.tam / 2);
+      ctx.rotate(o.giro);
+      ctx.fillText(o.emoji, 0, 0);
+      ctx.restore();
+    });
+}
+
+let loopRodando = false;
+function loopSim() {
+  if (!animando) { loopRodando = false; return; }
+  loopRodando = true;
+  atualizarSim();
+  desenharSim();
+  requestAnimationFrame(loopSim);
+}
+
+function mostrarInfoSim() {
+  const cat = categorias[nivelSim];
+  const levanta = coisas.filter(function (c) { return c.nivel <= nivelSim; })
+    .map(function (c) { return c.emoji; });
+  simInfoEl.style.borderLeftColor = cat.cor;
+  simInfoEl.innerHTML =
+    "<h3>" + cat.nome + " – Dano " + cat.dano + "</h3>" +
+    "<p>💨 <strong>Vento:</strong> " + cat.vento + "</p>" +
+    "<p>🌪️ <strong>Puxa do chão:</strong> " + levanta.join(" ") + "</p>" +
+    "<p>🏚️ <strong>O que acontece:</strong> " + cat.efeito + "</p>";
+}
+
+categorias.forEach(function (cat, i) {
+  const b = document.createElement("button");
+  b.className = "card";
+  b.textContent = cat.nome;
+  b.style.background = cat.cor;
+  b.addEventListener("click", function () {
+    simBotoesEl.querySelectorAll(".card").forEach(function (c) { c.classList.remove("ativo"); });
+    b.classList.add("ativo");
+    nivelSim = i;
+    criarObjetos();
+    mostrarInfoSim();
+    if (!animando) desenharSim();
+  });
+  simBotoesEl.appendChild(b);
+});
+
+criarObjetos();
+simBotoesEl.firstChild.classList.add("ativo");
+mostrarInfoSim();
+desenharSim();
+
+// Só anima enquanto o simulador aparece na tela
+new IntersectionObserver(function (entradas) {
+  animando = entradas[0].isIntersecting;
+  if (animando && !loopRodando) loopSim();
+}).observe(canvas);
 
 // Mostra a linha do tempo
 const tempoEl = document.getElementById("linha-do-tempo");
