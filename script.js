@@ -171,18 +171,18 @@ function desenharNuvem() {
   for (let k = -5; k <= 5; k++) {
     const x = tornado.x + k * 62 + Math.sin(tornado.tempo / 70 + k) * 6;
     const y = 22 + Math.abs(k) * 5;
-    ctx.fillStyle = "rgba(" + (38 + Math.abs(k) * 4) + ", " + (46 + Math.abs(k) * 4) + ", 58, 0.95)";
+    ctx.fillStyle = "rgb(" + (38 + Math.abs(k) * 4) + ", " + (46 + Math.abs(k) * 4) + ", 58)";
     ctx.beginPath();
     ctx.ellipse(x, y, 82, 28, 0, 0, Math.PI * 2);
     ctx.fill();
   }
   // nuvem-parede (wall cloud) logo acima do funil
-  ctx.fillStyle = "rgba(30, 36, 46, 0.95)";
+  ctx.fillStyle = "rgb(30, 36, 46)";
   ctx.beginPath();
   ctx.ellipse(tornado.x, 52, larguraFunil(0) * 0.9 + 20, 14, 0, 0, Math.PI * 2);
   ctx.fill();
   // chuva ao redor do funil
-  ctx.strokeStyle = "rgba(60, 75, 95, 0.35)";
+  ctx.strokeStyle = "rgb(110, 125, 145)";
   ctx.lineWidth = 1;
   for (let i = 0; i < 40; i++) {
     const rx = tornado.x + ((i * 53 + tornado.tempo * 3) % 360) - 180;
@@ -217,9 +217,9 @@ function desenharTornado() {
   ctx.closePath();
 
   const grad = ctx.createLinearGradient(0, TOPO_FUNIL, 0, BASE_FUNIL);
-  grad.addColorStop(0, "rgba(55, 62, 72, 0.95)");
-  grad.addColorStop(0.6, "rgba(95, 104, 114, 0.9)");
-  grad.addColorStop(1, "rgba(130, 120, 105, 0.9)");
+  grad.addColorStop(0, "rgb(55, 62, 72)");
+  grad.addColorStop(0.6, "rgb(95, 104, 114)");
+  grad.addColorStop(1, "rgb(130, 120, 105)");
   ctx.fillStyle = grad;
   ctx.fill();
   ctx.clip();
@@ -250,7 +250,7 @@ function desenharTornado() {
   for (let i = 0; i < 9; i++) {
     const a = tornado.tempo / 10 + i * 0.7;
     const r = 16 + nivelSim * 6 + (i % 3) * 8;
-    ctx.fillStyle = "rgba(120, 100, 75, " + (0.22 + (i % 3) * 0.06) + ")";
+    ctx.fillStyle = "rgb(" + (120 + (i % 3) * 8) + ", " + (100 + (i % 3) * 8) + ", 75)";
     ctx.beginPath();
     ctx.ellipse(bx + Math.cos(a) * r * 1.3, BASE_FUNIL - 6 + Math.sin(a) * 5 - (i % 3) * 5,
       r, r * 0.45, 0, 0, Math.PI * 2);
