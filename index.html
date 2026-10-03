@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Tudo sobre tornados: como se formam, categorias da escala Fujita, tornados históricos e quiz.">
+  <title>Mundo dos Tornados</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <nav class="menu">
+    <a class="marca" href="#topo">🌪️ Mundo dos Tornados</a>
+    <div class="links">
+      <a href="#o-que-e">O que é</a>
+      <a href="#categorias">Categorias</a>
+      <a href="#historia">História</a>
+      <a href="#galeria">Galeria</a>
+      <a href="#quiz">Quiz</a>
+      <a href="#curiosidades">Curiosidades</a>
+    </div>
+  </nav>
+
+  <header id="topo" class="hero">
+    <div class="hero-texto">
+      <span class="etiqueta">Ciência da atmosfera</span>
+      <h1>Mundo dos Tornados</h1>
+      <p>Descubra como eles nascem, como são classificados e quais foram os maiores da história.</p>
+      <a class="botao" href="#categorias">Explorar categorias</a>
+    </div>
+    <div class="hero-numeros">
+      <div><strong>~1.200</strong><span>tornados por ano nos EUA</span></div>
+      <div><strong>484 km/h</strong><span>maior vento já medido</span></div>
+      <div><strong>6</strong><span>categorias (EF0 a EF5)</span></div>
+    </div>
+  </header>
+
+  <main>
+
+    <section id="o-que-e">
+      <h2>O que é um tornado?</h2>
+      <div class="duas-colunas">
+        <div>
+          <p>
+            Um tornado é uma coluna de ar que gira muito rápido e liga a nuvem de tempestade ao chão.
+            Ele nasce de nuvens enormes chamadas <strong>supercélulas</strong>, quando o ar quente e
+            úmido encontra o ar frio e começa a girar.
+          </p>
+          <p>O diagrama ao lado mostra, passo a passo, como isso acontece.</p>
+        </div>
+        <figure class="figura">
+          <img src="imagens/tornado-formacao.webp" alt="Diagrama da formação de um tornado">
+          <figcaption>Formação de um tornado. Fonte: Toda Matéria.</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <section id="categorias">
+      <h2>Categorias: Escala Fujita Melhorada</h2>
+      <p>Os cientistas medem a força de um tornado pelos estragos que ele causa. Clique em uma categoria.</p>
+      <div id="lista-categorias" class="cards"></div>
+      <div id="detalhe-categoria" class="detalhe">Escolha uma categoria para ver os detalhes.</div>
+    </section>
+
+    <section id="historia">
+      <h2>Tornados que marcaram a história</h2>
+      <div id="linha-do-tempo"></div>
+    </section>
+
+    <section id="galeria">
+      <h2>Galeria</h2>
+      <p>Clique em uma imagem para ampliar.</p>
+      <div id="fotos" class="fotos"></div>
+    </section>
+
+    <section id="quiz">
+      <h2>Quiz: você sabe tudo sobre tornados?</h2>
+      <div id="quiz-caixa"></div>
+    </section>
+
+    <section id="curiosidades">
+      <h2>Curiosidades</h2>
+      <ul class="curiosidades">
+        <li><span>🌎</span> Os Estados Unidos têm mais tornados do que qualquer outro país, cerca de 1.200 por ano.</li>
+        <li><span>💨</span> O vento mais rápido já medido na Terra foi de cerca de 484 km/h, dentro de um tornado em 1999.</li>
+        <li><span>🇧🇷</span> O Brasil também tem tornados, principalmente no Sul. Em 2015, um tornado atingiu Xanxerê (SC).</li>
+        <li><span>🌀</span> Quando o tornado passa sobre a água, ele se chama <strong>tromba-d'água</strong>.</li>
+      </ul>
+    </section>
+
+  </main>
+
+  <div id="ampliada" class="ampliada" hidden>
+    <img id="ampliada-img" alt="">
+    <p id="ampliada-legenda"></p>
+  </div>
+
+  <footer>
+    <p><strong>Mundo dos Tornados</strong> · Projeto de estudo · Dados aproximados.</p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
