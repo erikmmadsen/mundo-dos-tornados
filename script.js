@@ -376,9 +376,7 @@ const fotos = [
   { arquivo: "galeria/tornado-tromba-dagua-dupla.webp", legenda: "Tromba-d'água dupla", credito: "GollyGforce - Living My Worst Nightmare, CC BY 2.0" },
   { arquivo: "galeria/tornado-nuvem-funil-noaa.webp", legenda: "Nuvem-funil descendo em direção ao solo — acervo NOAA", credito: "Acervo oficial (NOAA/NWS), domínio público" },
   { arquivo: "galeria/tornado-nuvem-funil-vortex.webp", legenda: "Nuvem-funil — projeto VORTEX, 1994", credito: "Unknown VORTEX project member., domínio público" },
-  { arquivo: "galeria/tornado-vortex2-2009.webp", legenda: "Tornado — projeto VORTEX2, 2009", credito: "John Oakland, CIMSS.
-
-Credit: VORTEX II., domínio público" },
+  { arquivo: "galeria/tornado-vortex2-2009.webp", legenda: "Tornado — projeto VORTEX2, 2009", credito: "John Oakland, CIMSS / VORTEX II, domínio público" },
   { arquivo: "galeria/tornado-nuvem-parede-noaa.webp", legenda: "Nuvem-parede em rotação — NOAA, 1976", credito: "OAR/ERL/National Severe Storms Laborator, domínio público" },
   { arquivo: "galeria/tornado-dano-f4-pirai.webp", legenda: "Árvores destruídas por tornado F4 — Piraí do Sul, Brasil", credito: "Ado LM, CC BY-SA 4.0" },
   { arquivo: "galeria/tornado-dano-ef5-arvore.webp", legenda: "Árvore sem casca após tornado EF5 — El Reno, EUA", credito: "Runningonbrains, CC BY-SA 3.0" },

@@ -45,3 +45,5 @@ Site estático em português (pt-BR), "Mundo dos Tornados": explica como os torn
 | `feat/erikmm_galeria-30-fotos-reais_20261003` | tudo acima + galeria com 26 fotos reais | não |
 
 Atualizar esta seção a cada nova alteração.
+
+Lição: uma quebra de linha literal dentro de uma string JS (`"..."`) derruba o `script.js` inteiro. Ao colar créditos/legendas vindos de fontes externas (ex.: Wikimedia), tirar quebras de linha.
