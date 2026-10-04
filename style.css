@@ -124,6 +124,20 @@ h2 {
 .regiao-meta strong { color: var(--escuro); }
 .regiao p { margin: 0; font-size: 0.95rem; }
 .regiao p + p { margin-top: 4px; }
+
+/* Alertas da Defesa Civil */
+.alertas { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 14px; margin: 16px 0; }
+.alerta { background: #f8fafc; border: 1px solid var(--borda); border-left: 8px solid var(--cinza); border-radius: 10px; padding: 14px 16px; }
+.alerta-topo { display: flex; align-items: center; gap: 12px; margin-bottom: 8px; }
+.alerta-selo {
+  flex: none; width: 44px; height: 44px; border-radius: 50%; display: flex; align-items: center;
+  justify-content: center; font-size: 1.5rem; font-weight: 700;
+}
+.alerta-selo.triangulo { width: 52px; height: 47px; border-radius: 0; background: none; }
+.alerta h4 { margin: 0; color: var(--escuro); font-size: 1.05rem; }
+.alerta-risco { font-size: 0.9rem; color: var(--cinza); }
+.alerta p { margin: 4px 0; font-size: 0.95rem; }
+
 .figura { margin: 0; }
 .figura img { width: 100%; border-radius: 10px; display: block; }
 figcaption { font-size: 0.85rem; color: var(--cinza); margin-top: 6px; }
