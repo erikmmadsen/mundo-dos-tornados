@@ -169,8 +169,16 @@
 
     <section id="galeria">
       <h2>Galeria</h2>
-      <p>Clique em uma imagem para ampliar. Fotos reais do Wikimedia Commons (licenças livres); autores e licenças em <code>imagens/CREDITOS.md</code>.</p>
-      <div id="fotos" class="fotos"></div>
+      <p>Deslize para os lados e clique na foto em destaque para ampliar. Fotos reais do Wikimedia Commons (licenças livres); autores e licenças em <code>imagens/CREDITOS.md</code>.</p>
+      <div id="galeria-filtros" class="galeria-filtros" role="group" aria-label="Filtrar fotos por tipo de tornado"></div>
+      <div class="carrossel-caixa">
+        <button id="car-ant" class="carrossel-seta anterior" type="button" aria-label="Foto anterior">‹</button>
+        <div id="carrossel" class="carrossel" role="region" aria-label="Carrossel de fotos de tornados" tabindex="0"></div>
+        <button id="car-prox" class="carrossel-seta seguinte" type="button" aria-label="Próxima foto">›</button>
+      </div>
+      <div class="car-progresso" aria-hidden="true"><div id="car-barra"></div></div>
+      <p id="car-contador" class="car-contador" aria-live="polite"></p>
+      <div id="miniaturas" class="miniaturas"></div>
     </section>
 
     <section id="quiz">
@@ -190,10 +198,19 @@
 
   </main>
 
-  <div id="ampliada" class="ampliada" hidden>
-    <img id="ampliada-img" alt="">
-    <p id="ampliada-legenda"></p>
-  </div>
+  <dialog id="visualizador" class="visualizador" aria-label="Foto ampliada">
+    <button id="vis-fechar" class="vis-fechar" type="button" aria-label="Fechar">✕</button>
+    <button id="vis-ant" class="vis-seta vis-ant" type="button" aria-label="Foto anterior">‹</button>
+    <figure class="vis-figura">
+      <img id="vis-img" class="vis-img" alt="" draggable="false">
+      <figcaption>
+        <span id="vis-legenda"></span>
+        <small id="vis-credito"></small>
+        <span id="vis-contador" class="vis-contador" aria-live="polite"></span>
+      </figcaption>
+    </figure>
+    <button id="vis-prox" class="vis-seta vis-prox" type="button" aria-label="Próxima foto">›</button>
+  </dialog>
 
   <footer>
     <p><strong>Mundo dos Tornados</strong> · Projeto de estudo · Dados aproximados.</p>
@@ -201,6 +218,7 @@
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
   <script src="script.js"></script>
+  <script src="galeria.js"></script>
   <script src="radar.js"></script>
 </body>
 </html>
