@@ -20,11 +20,11 @@ Abra o `index.html` no navegador. O radar precisa de internet (Open-Meteo, Leafl
 | Arquivo | Para que serve |
 |---|---|
 | `index.html` | Página única com todas as seções |
-| `style.css` | Estilos |
-| `script.js` | Dados (categorias, história, regiões, alertas, quiz) e simulador |
-| `galeria.js` | Galeria em carrossel |
-| `radar.js` | Radar de previsão sobre mapa Leaflet |
-| `imagens/` | Imagens do site; autores e licenças em `imagens/CREDITOS.md` |
+| `css/style.css` | Estilos |
+| `js/script.js` | Dados (categorias, história, regiões, alertas, quiz) e simulador |
+| `js/galeria.js` | Galeria em carrossel |
+| `js/radar.js` | Radar de previsão sobre mapa Leaflet |
+| `imagens/` | Imagens do site (`hero/` e `galeria/`); autores e licenças em `imagens/CREDITOS.md` |
 
 ## Tecnologias e fontes de dados
 

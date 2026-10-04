@@ -451,9 +451,9 @@ regioes.forEach(function (r) {
 // Coloque as imagens na pasta "imagens" e escreva o nome do arquivo aqui.
 // "tipos" define em quais filtros da galeria a foto aparece.
 const fotos = [
-  { arquivo: "tornado-campo.jpg", tipos: [], legenda: "Tornado em campo aberto" },
-  { arquivo: "tornado-formacao.webp", tipos: ["formacao"], legenda: "Como um tornado se forma" },
-  { arquivo: "supercelula.webp", tipos: ["formacao"], legenda: "Estrutura de uma nuvem supercélula" },
+  { arquivo: "hero/tornado-campo.jpg", tipos: [], legenda: "Tornado em campo aberto" },
+  { arquivo: "hero/tornado-formacao.webp", tipos: ["formacao"], legenda: "Como um tornado se forma" },
+  { arquivo: "hero/supercelula.webp", tipos: ["formacao"], legenda: "Estrutura de uma nuvem supercélula" },
   { arquivo: "galeria/tornado-landspout-lamar-co.webp", tipos: ["landspout"], legenda: "Landspout (tornado sem supercélula) — Lamar, Colorado, EUA, 2023", credito: "Stefan Klein, CC BY-SA 4.0" },
   { arquivo: "galeria/tornado-ef0-alasca.webp", tipos: ["fracos"], legenda: "Tornado EF0 — Rusty Point, Alasca, EUA, 2024", credito: "NWS Anchorage, domínio público" },
   { arquivo: "galeria/tornado-ef4-solomon-ks.webp", tipos: ["fortes"], legenda: "Tornado EF4 — Solomon, Kansas, EUA, 2016", credito: "Ks0stm, CC BY 4.0" },

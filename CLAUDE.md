@@ -5,12 +5,13 @@ Site estático em português (pt-BR), "Mundo dos Tornados": explica como os torn
 ## Estrutura
 
 - `index.html`: página única com as seções (o-que-e, ar-quente-frio, supercelula, categorias, simulador, historia, regioes, radar, alertas, galeria, quiz, curiosidades).
-- `style.css`: estilos.
-- `script.js`: dados (categorias, tornados históricos, fotos, perguntas), simulador e a renderização das seções.
-- `galeria.js`: seção `#galeria`, carrossel (scroll-snap) com filtros por tipo (campo `tipos` de cada foto em `script.js`), miniaturas, barra de progresso e visualizador em `<dialog>` com setas, teclado e swipe.
-- `radar.js`: seção `#radar`, previsão real de 3 dias (chuva, vento, CAPE) via Open-Meteo, desenhada sobre mapa Leaflet (CDN cdnjs, tiles Esri Light Gray, sem chave; CARTO e OSM não servem: pedem chave/referer). Precisa de internet.
-- `radar.js`: seção `#radar`, previsão real de 3 dias (chuva, vento, CAPE) via Open-Meteo, cobrindo toda a área visível do mapa, que fica travado na cidade pesquisada (um pedido por busca), e desenhada sobre mapa Leaflet (CDN cdnjs, tiles Esri Light Gray, sem chave; CARTO e OSM não servem: pedem chave/referer). Precisa de internet.
-- `imagens/`: `supercelula.webp`, `tornado-campo.jpg`, `tornado-formacao.webp` e `galeria/` (26 fotos reais de tornados em WebP, máx. 1600 px, ~3,5 MB; autores e licenças em `imagens/CREDITOS.md`).
+- `css/style.css`: estilos.
+- `js/script.js`: dados (categorias, tornados históricos, fotos, perguntas), simulador e a renderização das seções.
+- `js/galeria.js`: seção `#galeria`, carrossel (scroll-snap) com filtros por tipo (campo `tipos` de cada foto em `script.js`), miniaturas, barra de progresso e visualizador em `<dialog>` com setas, teclado e swipe.
+- `js/radar.js`: seção `#radar`, previsão real de 3 dias (chuva, vento, CAPE) via Open-Meteo, desenhada sobre mapa Leaflet (CDN cdnjs, tiles Esri Light Gray, sem chave; CARTO e OSM não servem: pedem chave/referer). Precisa de internet.
+- `js/radar.js`: seção `#radar`, previsão real de 3 dias (chuva, vento, CAPE) via Open-Meteo, cobrindo toda a área visível do mapa, que fica travado na cidade pesquisada (um pedido por busca), e desenhada sobre mapa Leaflet (CDN cdnjs, tiles Esri Light Gray, sem chave; CARTO e OSM não servem: pedem chave/referer). Precisa de internet.
+- `imagens/`: `hero/` (`supercelula.webp`, `tornado-campo.jpg`, `tornado-formacao.webp`) e `galeria/` (26 fotos reais de tornados em WebP, máx. 1600 px, ~3,5 MB; autores e licenças em `imagens/CREDITOS.md`).
+- `rascunhos-pr/`: rascunhos locais de descrição de PR (`pr-*.md`), ignorados pelo Git.
 
 ## Convenções
 
@@ -43,6 +44,7 @@ Tudo acima foi incorporado à `main` por fast-forward (sem repositório remoto; 
 - Branch `feat/erikmm_integra-radar-galeria-regioes_20261004` (a partir da branch `supercelula-ar-quente-frio`, com merge das branches `radar-mapa-travado` e `galeria-carrossel`): **junta tudo e acrescenta os tornados mais fortes por região.** Traz o radar de mapa travado, a galeria em carrossel e as seções Supercélula e Ar quente e frio. Nova seção `#regioes` (dados em `regioes` no `script.js`, cards `.regiao`, link "Regiões" no menu) com um tornado por região: América do Norte (Bridge Creek-Moore 1999), América do Sul (San Justo 1973), Brasil (Itu 1991 e Rio Bonito do Iguaçu 2025), Europa (Palluel 1967), Ásia (Daulatpur-Saturia 1989), África (oThongathi 2024), Oceania (Bowen 1876 e Frankton 1948). Classificações antigas são estimativas e variam por fonte. **Ainda não incorporada à `main`.**
 - Branch `feat/erikmm_alertas-defesa-civil_20261004` (a partir da branch `integra-radar-galeria-regioes`): **alertas da Defesa Civil.** Nova seção `#alertas` (após o radar, link "Alertas" no menu) com as três cores (Amarelo/Perigo potencial, Laranja/Perigo, Vermelho/Grande perigo: risco, referência de vento e chuva, o que significa e o que fazer) e os alertas de celular (severo 🔔 e extremo 🚨, SMS 40199, telefone 199). Dados em `alertasCores` e `alertasCelular` no `script.js`; estilos `.alerta*`. Os símbolos das cores são triângulos de alerta em SVG (função `trianguloAlerta` no `script.js`, feitos no estilo das imagens enviadas pelo usuário, sem usar as originais por causa da marca d'água); os de celular são emojis 🔔 e 🚨. Não é o logotipo oficial. Tornado não tem cor própria: entra nos alertas de tempestade. **Ainda não incorporada à `main`.**
 - Branch `feat/erikmm_ordem-secoes_20261004` (a partir da branch `alertas-defesa-civil`): **seções e menu em ordem lógica.** Aprender (O que é, Ar quente e frio, Supercélula), classificar (Categorias, Simulador), história (História, Regiões), prevenção (Radar, Alertas), depois Galeria, Quiz e Curiosidades. Menu na mesma ordem das seções. **Ainda não incorporada à `main`.**
+- Branch `feat/erikmm_organiza-pastas_20261004` (a partir da `main`): **organização das pastas.** `style.css` foi para `css/`; `script.js`, `radar.js` e `galeria.js` para `js/`; as 3 imagens soltas para `imagens/hero/` (o campo `arquivo` em `fotos` passou a `hero/...`); os rascunhos `pr-*.md` para `rascunhos-pr/` (ignorada pelo Git). Sem mudança de comportamento. **Ainda não incorporada à `main`.**
 
 ### Estado das branches
 
@@ -67,6 +69,7 @@ Tudo acima foi incorporado à `main` por fast-forward (sem repositório remoto; 
 | `feat/erikmm_integra-radar-galeria-regioes_20261004` | radar travado + galeria carrossel + supercélula/ar quente e frio + tornados por região | não |
 | `feat/erikmm_alertas-defesa-civil_20261004` | tudo da integração + seção Alertas da Defesa Civil | não |
 | `feat/erikmm_ordem-secoes_20261004` | tudo anterior + seções e menu em ordem lógica | não |
+| `feat/erikmm_organiza-pastas_20261004` | pastas css/, js/, imagens/hero/ e rascunhos-pr/ | não |
 | `feat/erikmm_galeria-carrossel_20261003` | galeria em carrossel com filtros e popup | não |
 | `feat/erikmm_galeria-carrossel_20261003` | galeria em carrossel com filtros e popup | não |
 | `feat/erikmm_radar-area-maior_20261004` | radar com grade maior (9x9, 1,5°) e fitBounds | não |
