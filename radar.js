@@ -2,8 +2,8 @@
 // Dados reais do Open-Meteo (gratuito, sem chave). Pedimos uma grade de pontos ao redor
 // da cidade e desenhamos a previsão hora a hora sobre um mapa.
 
-const GRADE = 7;            // 7 x 7 pontos
-const PASSO = 1.0;          // graus entre pontos (cerca de 110 km)
+const GRADE = 9;            // 9 x 9 pontos
+const PASSO = 1.5;          // graus entre pontos (cerca de 165 km); a grade cobre ~1300 km
 const HORAS = 72;           // 3 dias
 
 const radarStatusEl = document.getElementById("radar-status");
@@ -218,14 +218,13 @@ function iniciarRadar() {
   const limites = [[previsao.lat - meio, previsao.lon - meio], [previsao.lat + meio, previsao.lon + meio]];
 
   if (!mapa) {
-    mapa = L.map("radar-mapa", { scrollWheelZoom: false }).setView([previsao.lat, previsao.lon], 6);
+    mapa = L.map("radar-mapa", { scrollWheelZoom: false });
     L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}", {
       attribution: "Tiles © Esri", maxZoom: 12
     }).addTo(mapa);
     setasLayer = L.layerGroup().addTo(mapa);
-  } else {
-    mapa.setView([previsao.lat, previsao.lon], 6);
   }
+  mapa.fitBounds(limites);
   if (overlay) mapa.removeLayer(overlay);
   overlay = L.imageOverlay(canvasRadar.toDataURL(), limites, { opacity: 1 }).addTo(mapa);
   if (marcador) mapa.removeLayer(marcador);

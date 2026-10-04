@@ -32,7 +32,7 @@ Site estático em português (pt-BR), "Mundo dos Tornados": explica como os torn
 - Branch `feat/erikmm_atualiza-historico_20261003`: este histórico atualizado após o merge. **Incorporada à `main`.**
 
 Tudo acima foi incorporado à `main` por fast-forward (sem repositório remoto; o "deploy" é local). A branch `claude-md-historico` ficou como cópia: o `CLAUDE.md` já entrou na `main` via o commit equivalente da cadeia.
-- Branch `feat/erikmm_supercelula-ar-quente-frio_20261004` (a partir da `main`): **novas seções explicativas.** `#supercelula` (mesociclone, 4 passos, eco em gancho) e `#ar-quente-frio` (ar quente/úmido x ar frio/seco, instabilidade, gatilho, cisalhamento), ambas logo após "O que é um tornado?", com links no menu ("Supercélula" e "Ar quente e frio") e estilos `.passos`, `.ar`, `.sequencia`. **Ainda não incorporada à `main`.**
+
 
 ### Estado das branches
 
