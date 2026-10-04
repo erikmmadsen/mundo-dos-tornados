@@ -115,6 +115,16 @@ h2 {
 .sequencia { padding-left: 22px; }
 .sequencia li { margin-bottom: 8px; }
 
+/* Tornados mais fortes por região */
+.regioes { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 14px; margin-top: 16px; }
+.regiao { background: var(--azul-claro); border-top: 5px solid var(--destaque); border-radius: 10px; padding: 14px 16px; }
+.regiao-nome { font-size: 0.8rem; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase; color: var(--azul); }
+.regiao h3 { margin: 4px 0 2px; font-size: 1.05rem; color: var(--escuro); }
+.regiao-meta { margin: 0 0 6px; font-size: 0.9rem; color: var(--cinza); }
+.regiao-meta strong { color: var(--escuro); }
+.regiao p { margin: 0; font-size: 0.95rem; }
+.regiao p + p { margin-top: 4px; }
+
 .figura { margin: 0; }
 .figura img { width: 100%; border-radius: 10px; display: block; }
 figcaption { font-size: 0.85rem; color: var(--cinza); margin-top: 6px; }

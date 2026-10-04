@@ -38,6 +38,7 @@ Tudo acima foi incorporado à `main` por fast-forward (sem repositório remoto; 
 - Branch `feat/erikmm_radar-todo-mapa_20261004` (a partir da branch `radar-area-maior`, da qual depende): **radar cobre todo o mapa visível.** Em vez de uma grade fixa em volta da cidade, a grade 10x7 cobre a área visível do mapa (+25% de margem) e é pedida de novo ao arrastar ou dar zoom (atraso de 700 ms, respostas antigas descartadas, zoom mínimo 5). A cidade pesquisada vai como ponto extra na mesma chamada e alimenta o resumo por dia. Linhas da grade espaçadas na projeção Mercator, como o Leaflet estica a imagem. **Ainda não incorporada à `main`.**
 - Branch `feat/erikmm_radar-mapa-travado_20261004` (a partir da branch `radar-todo-mapa`): **mapa travado no lugar pesquisado, para gastar menos dados.** Sem arrastar, zoom nem botões de zoom; a grade 10x7 cobre a área visível e é pedida **uma vez por busca** (antes recarregava a cada movimento). **Ainda não incorporada à `main`.**
 - Branch `feat/erikmm_galeria-carrossel_20261003`: **galeria moderna.** Carrossel cinematográfico com deslize lateral (scroll-snap, arrastar com mouse, setas e teclado), chips de filtro por tipo (Fracos, Fortes, Landspout/tromba-d'água, Formação, Danos, Brasil), miniaturas e barra de progresso; clique na foto em destaque abre popup (`<dialog>`) com anterior/próxima, contador, ESC, clique no fundo, swipe e pré-carga da vizinha. Respeita `prefers-reduced-motion` (usa `behavior: "instant"`, pois `"auto"` herdaria o `scroll-behavior: smooth` do CSS). **Ainda não incorporada à `main`.**
+- Branch `feat/erikmm_integra-radar-galeria-regioes_20261004` (a partir da branch `supercelula-ar-quente-frio`, com merge das branches `radar-mapa-travado` e `galeria-carrossel`): **junta tudo e acrescenta os tornados mais fortes por região.** Traz o radar de mapa travado, a galeria em carrossel e as seções Supercélula e Ar quente e frio. Nova seção `#regioes` (dados em `regioes` no `script.js`, cards `.regiao`, link "Regiões" no menu) com um tornado por região: América do Norte (Bridge Creek-Moore 1999), América do Sul (San Justo 1973), Brasil (Itu 1991 e Rio Bonito do Iguaçu 2025), Europa (Palluel 1967), Ásia (Daulatpur-Saturia 1989), África (oThongathi 2024), Oceania (Bowen 1876 e Frankton 1948). Classificações antigas são estimativas e variam por fonte. **Ainda não incorporada à `main`.**
 
 ### Estado das branches
 
@@ -59,6 +60,7 @@ Tudo acima foi incorporado à `main` por fast-forward (sem repositório remoto; 
 | `feat/erikmm_radar-area-maior_20261004` | radar com grade maior (9x9, 1,5°) e fitBounds | não |
 | `feat/erikmm_radar-todo-mapa_20261004` | grade sobre toda a área visível, recarregando ao mover o mapa | não |
 | `feat/erikmm_radar-mapa-travado_20261004` | mapa travado na cidade pesquisada, um pedido por busca | não |
+| `feat/erikmm_integra-radar-galeria-regioes_20261004` | radar travado + galeria carrossel + supercélula/ar quente e frio + tornados por região | não |
 | `feat/erikmm_galeria-carrossel_20261003` | galeria em carrossel com filtros e popup | não |
 
 Atualizar esta seção a cada nova alteração.
