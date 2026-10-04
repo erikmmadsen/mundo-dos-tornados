@@ -315,7 +315,10 @@ camadasRadar.forEach(function (cam) {
 // ---- busca de cidade e localização ----
 async function buscarCidade() {
   const nome = document.getElementById("radar-cidade").value.trim();
-  if (!nome) return;
+  if (!nome) {
+    radarStatusEl.textContent = "Digite o nome de uma cidade para buscar.";
+    return;
+  }
   radarStatusEl.textContent = "Procurando " + nome + "...";
   try {
     const resp = await fetch("https://geocoding-api.open-meteo.com/v1/search?count=1&language=pt&name=" +

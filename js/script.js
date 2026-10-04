@@ -39,9 +39,9 @@ const regioes = [
     texto: "Radar Doppler mediu cerca de 484 km/h, o vento mais rápido já registrado na Terra." },
   { regiao: "América do Sul", emoji: "🌎", nome: "San Justo, Santa Fe (Argentina)", data: "10 de janeiro de 1973", nivel: "F5",
     texto: "Considerado o tornado mais forte do Hemisfério Sul, com cerca de 63 mortes." },
-  { regiao: "Brasil", emoji: "🇧🇷", nome: "Itu, São Paulo", data: "24 de maio de 1991", nivel: "F4",
+  { regiao: "Brasil", emoji: "📍", nome: "Itu, São Paulo", data: "24 de maio de 1991", nivel: "F4",
     texto: "Um dos mais violentos já registrados no país, com ventos de até cerca de 300 km/h e 15 mortes." },
-  { regiao: "Brasil (mais recente)", emoji: "🇧🇷", nome: "Rio Bonito do Iguaçu, Paraná", data: "7 de novembro de 2025", nivel: "F4",
+  { regiao: "Brasil (mais recente)", emoji: "📍", nome: "Rio Bonito do Iguaçu, Paraná", data: "7 de novembro de 2025", nivel: "F4",
     texto: "O Simepar elevou a classificação para F4, com ventos acima de 300 km/h. Destruiu boa parte da área urbana." },
   { regiao: "Europa", emoji: "🌍", nome: "Palluel (França)", data: "24 de junho de 1967", nivel: "F5",
     texto: "A maior classificação já atribuída a um tornado europeu. Em 2021, um tornado IF4 na Morávia do Sul (Tchéquia) matou 6 pessoas." },
@@ -407,8 +407,10 @@ function trianguloAlerta(tipo) {
     vermelho: { fill: "#ff0000", borda: "#ff0000", larg: 10, marca: "#ffffff" }
   }[tipo];
   return '<svg viewBox="0 0 100 90" width="52" height="47" aria-hidden="true">' +
-    '<defs><linearGradient id="grad-alerta-laranja" x1="0" y1="0" x2="0" y2="1">' +
-    '<stop offset="0" stop-color="#ff9a2e"/><stop offset="1" stop-color="#e8590c"/></linearGradient></defs>' +
+    (tipo === "laranja"
+      ? '<defs><linearGradient id="grad-alerta-laranja" x1="0" y1="0" x2="0" y2="1">' +
+        '<stop offset="0" stop-color="#ff9a2e"/><stop offset="1" stop-color="#e8590c"/></linearGradient></defs>'
+      : "") +
     '<polygon points="50,14 88,78 12,78" fill="' + t.fill + '" stroke="' + t.borda + '" stroke-width="' + t.larg + '" stroke-linejoin="round"/>' +
     '<rect x="45.5" y="37" width="9" height="22" rx="4.5" fill="' + t.marca + '"/>' +
     '<circle cx="50" cy="67" r="4.8" fill="' + t.marca + '"/></svg>';
@@ -539,6 +541,7 @@ function mostrarPergunta() {
       prox.textContent = "Próxima ➡️";
       prox.onclick = function () { atual++; mostrarPergunta(); };
       quizEl.appendChild(prox);
+      prox.focus();
     };
     botoes.push(b);
     quizEl.appendChild(b);

@@ -324,7 +324,7 @@ figcaption { font-size: 0.85rem; color: var(--cinza); margin-top: 6px; }
 /* Quiz */
 .opcao {
   display: block; width: 100%; margin: 8px 0; padding: 13px 16px; font-size: 1rem;
-  text-align: left; border: 2px solid var(--borda); border-radius: 10px;
+  font-family: inherit; text-align: left; border: 2px solid var(--borda); border-radius: 10px;
   background: white; cursor: pointer; transition: background 0.15s;
 }
 .opcao:hover:not(:disabled) { background: var(--azul-claro); border-color: var(--azul); }
@@ -332,7 +332,7 @@ figcaption { font-size: 0.85rem; color: var(--cinza); margin-top: 6px; }
 .opcao.errada { background: #fadbd8; border-color: #e74c3c; }
 .proxima {
   margin-top: 12px; padding: 11px 22px; border: none; border-radius: 8px;
-  background: var(--azul); color: white; font-size: 1rem; font-weight: 600; cursor: pointer;
+  background: var(--azul); color: white; font-family: inherit; font-size: 1rem; font-weight: 600; cursor: pointer;
 }
 .proxima:hover { background: var(--escuro); }
 
