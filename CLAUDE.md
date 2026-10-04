@@ -4,7 +4,7 @@ Site estático em português (pt-BR), "Mundo dos Tornados": explica como os torn
 
 ## Estrutura
 
-- `index.html`: página única com as seções (o-que-e, categorias, simulador, radar, historia, galeria, quiz, curiosidades).
+- `index.html`: página única com as seções (o-que-e, supercelula, ar-quente-frio, categorias, simulador, radar, historia, galeria, quiz, curiosidades).
 - `style.css`: estilos.
 - `script.js`: dados (categorias, tornados históricos, fotos, perguntas), simulador e a renderização das seções.
 - `radar.js`: seção `#radar`, previsão real de 3 dias (chuva, vento, CAPE) via Open-Meteo, desenhada sobre mapa Leaflet (CDN cdnjs, tiles Esri Light Gray, sem chave; CARTO e OSM não servem: pedem chave/referer). Precisa de internet.
@@ -32,7 +32,7 @@ Site estático em português (pt-BR), "Mundo dos Tornados": explica como os torn
 - Branch `feat/erikmm_atualiza-historico_20261003`: este histórico atualizado após o merge. **Incorporada à `main`.**
 
 Tudo acima foi incorporado à `main` por fast-forward (sem repositório remoto; o "deploy" é local). A branch `claude-md-historico` ficou como cópia: o `CLAUDE.md` já entrou na `main` via o commit equivalente da cadeia.
-- Branch `feat/erikmm_radar-area-maior_20261004` (a partir da `main`): **radar cobre área maior.** Grade 9x9 com passo de 1,5° (~1300 km, antes 7x7 com 1°, ~660 km, que aparecia como um quadrado pequeno no mapa) e o mapa agora enquadra a grade com `fitBounds`. **Ainda não incorporada à `main`.**
+
 
 ### Estado das branches
 
@@ -50,6 +50,7 @@ Tudo acima foi incorporado à `main` por fast-forward (sem repositório remoto; 
 | `feat/erikmm_galeria-30-fotos-reais_20261003` | tudo acima + galeria com 26 fotos reais | sim |
 | `feat/erikmm_galeria-30-fotos-reais_20261003` | + galeria com fotos reais e correção do script | sim |
 | `feat/erikmm_atualiza-historico_20261003` | histórico atualizado | sim |
+| `feat/erikmm_supercelula-ar-quente-frio_20261004` | seções Supercélula e Ar quente e frio + menu | não |
 
 Atualizar esta seção a cada nova alteração.
 
