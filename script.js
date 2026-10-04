@@ -32,6 +32,29 @@ const historia = [
     texto: "Atingiu a cidade de Xanxerê, em Santa Catarina, e deixou muitos feridos." }
 ];
 
+// Tornado mais forte (ou mais devastador) de cada região. As classificações de tornados antigos
+// são estimativas feitas depois do evento e podem variar conforme a fonte.
+const regioes = [
+  { regiao: "América do Norte", emoji: "🌎", nome: "Bridge Creek-Moore, Oklahoma (EUA)", data: "3 de maio de 1999", nivel: "F5",
+    texto: "Radar Doppler mediu cerca de 484 km/h, o vento mais rápido já registrado na Terra." },
+  { regiao: "América do Sul", emoji: "🌎", nome: "San Justo, Santa Fe (Argentina)", data: "10 de janeiro de 1973", nivel: "F5",
+    texto: "Considerado o tornado mais forte do Hemisfério Sul, com cerca de 63 mortes." },
+  { regiao: "Brasil", emoji: "🇧🇷", nome: "Itu, São Paulo", data: "24 de maio de 1991", nivel: "F4",
+    texto: "Um dos mais violentos já registrados no país, com ventos de até cerca de 300 km/h e 15 mortes." },
+  { regiao: "Brasil (mais recente)", emoji: "🇧🇷", nome: "Rio Bonito do Iguaçu, Paraná", data: "7 de novembro de 2025", nivel: "F4",
+    texto: "O Simepar elevou a classificação para F4, com ventos acima de 300 km/h. Destruiu boa parte da área urbana." },
+  { regiao: "Europa", emoji: "🌍", nome: "Palluel (França)", data: "24 de junho de 1967", nivel: "F5",
+    texto: "A maior classificação já atribuída a um tornado europeu. Em 2021, um tornado IF4 na Morávia do Sul (Tchéquia) matou 6 pessoas." },
+  { regiao: "Ásia", emoji: "🌏", nome: "Daulatpur-Saturia (Bangladesh)", data: "26 de abril de 1989", nivel: "F3 a F5",
+    texto: "O mais mortal da história, com cerca de 1.300 mortes. A força varia conforme a fonte: de F3 a F5." },
+  { regiao: "África", emoji: "🌍", nome: "oThongathi/Tongaat, KwaZulu-Natal (África do Sul)", data: "3 de junho de 2024", nivel: "EF3",
+    texto: "Um dos mais fortes confirmados no continente. Os tornados daquele dia deixaram pelo menos 11 mortos." },
+  { regiao: "Oceania (Austrália)", emoji: "🌏", nome: "Bowen, Queensland", data: "1876", nivel: "F5",
+    texto: "O único tornado australiano classificado como F5, com vento estimado em pelo menos 420 km/h." },
+  { regiao: "Oceania (Nova Zelândia)", emoji: "🌏", nome: "Frankton, Hamilton", data: "3 de agosto de 1948", nivel: "EF3",
+    texto: "O mais forte já conhecido na Nova Zelândia: danificou cerca de 200 construções e matou 3 pessoas." }
+];
+
 // Mostra os botões das categorias
 const listaEl = document.getElementById("lista-categorias");
 const detalheEl = document.getElementById("detalhe-categoria");
@@ -347,6 +370,20 @@ historia.forEach(function (ev) {
     "<strong>" + ev.nome + "</strong>" +
     "<p>" + ev.texto + "</p>";
   tempoEl.appendChild(div);
+});
+
+// Mostra os tornados mais fortes de cada região
+const regioesEl = document.getElementById("regioes-lista");
+
+regioes.forEach(function (r) {
+  const div = document.createElement("article");
+  div.className = "regiao";
+  div.innerHTML =
+    '<span class="regiao-nome"><span aria-hidden="true">' + r.emoji + "</span> " + r.regiao + "</span>" +
+    "<h3>" + r.nome + "</h3>" +
+    '<p class="regiao-meta"><strong>' + r.nivel + "</strong> · " + r.data + "</p>" +
+    "<p>" + r.texto + "</p>";
+  regioesEl.appendChild(div);
 });
 
 // ---------- Galeria de fotos ----------
