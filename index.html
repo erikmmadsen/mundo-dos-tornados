@@ -16,14 +16,14 @@
     <button id="menu-botao" class="menu-botao" aria-label="Abrir menu" aria-expanded="false" aria-controls="menu-links">☰</button>
     <div class="links" id="menu-links">
       <a href="#o-que-e">O que é</a>
-      <a href="#supercelula">Supercélula</a>
       <a href="#ar-quente-frio">Ar quente e frio</a>
+      <a href="#supercelula">Supercélula</a>
       <a href="#categorias">Categorias</a>
       <a href="#simulador">Simulador</a>
-      <a href="#radar">Radar</a>
-      <a href="#alertas">Alertas</a>
       <a href="#historia">História</a>
       <a href="#regioes">Regiões</a>
+      <a href="#radar">Radar</a>
+      <a href="#alertas">Alertas</a>
       <a href="#galeria">Galeria</a>
       <a href="#quiz">Quiz</a>
       <a href="#curiosidades">Curiosidades</a>
@@ -64,30 +64,6 @@
       </div>
     </section>
 
-    <section id="supercelula">
-      <h2>Como funciona a supercélula</h2>
-      <p>
-        A supercélula é a tempestade mais organizada e mais perigosa. O que a diferencia das outras é que a sua
-        corrente de ar ascendente <strong>gira</strong>. Essa rotação se chama <strong>mesociclone</strong> e pode
-        ter de 2 a 10 km de largura. Uma supercélula pode durar várias horas e percorrer centenas de quilômetros.
-      </p>
-      <div class="passos">
-        <div class="passo"><span>1</span><h3>Corrente ascendente</h3>
-          <p>O ar quente e úmido sobe em alta velocidade, formando uma torre de nuvem que passa dos 10 km de altura.</p></div>
-        <div class="passo"><span>2</span><h3>Rotação</h3>
-          <p>O vento muda de direção e fica mais forte com a altitude. Isso faz a corrente ascendente girar e vira o mesociclone.</p></div>
-        <div class="passo"><span>3</span><h3>Corrente descendente</h3>
-          <p>A chuva e o granizo puxam ar frio para baixo. Ele se espalha pelo chão e ajuda a levar a rotação até a superfície.</p></div>
-        <div class="passo"><span>4</span><h3>Nuvem-parede e funil</h3>
-          <p>Sob o mesociclone surge a nuvem-parede, que baixa. Se a rotação chega ao chão, o funil vira tornado.</p></div>
-      </div>
-      <p>
-        Nem toda supercélula gera tornado: só uma parte delas produz. Elas também trazem granizo grande, rajadas
-        destrutivas e chuva forte. No radar meteorológico, aparecem com um <strong>eco em gancho</strong>, a marca
-        da rotação dentro da tempestade.
-      </p>
-    </section>
-
     <section id="ar-quente-frio">
       <h2>Como funciona o ar quente e frio</h2>
       <p>
@@ -117,6 +93,30 @@
       </p>
     </section>
 
+    <section id="supercelula">
+      <h2>Como funciona a supercélula</h2>
+      <p>
+        A supercélula é a tempestade mais organizada e mais perigosa. O que a diferencia das outras é que a sua
+        corrente de ar ascendente <strong>gira</strong>. Essa rotação se chama <strong>mesociclone</strong> e pode
+        ter de 2 a 10 km de largura. Uma supercélula pode durar várias horas e percorrer centenas de quilômetros.
+      </p>
+      <div class="passos">
+        <div class="passo"><span>1</span><h3>Corrente ascendente</h3>
+          <p>O ar quente e úmido sobe em alta velocidade, formando uma torre de nuvem que passa dos 10 km de altura.</p></div>
+        <div class="passo"><span>2</span><h3>Rotação</h3>
+          <p>O vento muda de direção e fica mais forte com a altitude. Isso faz a corrente ascendente girar e vira o mesociclone.</p></div>
+        <div class="passo"><span>3</span><h3>Corrente descendente</h3>
+          <p>A chuva e o granizo puxam ar frio para baixo. Ele se espalha pelo chão e ajuda a levar a rotação até a superfície.</p></div>
+        <div class="passo"><span>4</span><h3>Nuvem-parede e funil</h3>
+          <p>Sob o mesociclone surge a nuvem-parede, que baixa. Se a rotação chega ao chão, o funil vira tornado.</p></div>
+      </div>
+      <p>
+        Nem toda supercélula gera tornado: só uma parte delas produz. Elas também trazem granizo grande, rajadas
+        destrutivas e chuva forte. No radar meteorológico, aparecem com um <strong>eco em gancho</strong>, a marca
+        da rotação dentro da tempestade.
+      </p>
+    </section>
+
     <section id="categorias">
       <h2>Categorias: Escala Fujita Melhorada</h2>
       <p>Os cientistas medem a força de um tornado pelos estragos que ele causa. Clique em uma categoria para ver os detalhes e a simulação.</p>
@@ -128,6 +128,21 @@
       <canvas id="sim-canvas" class="sim-canvas" width="900" height="400" role="img"
               aria-label="Simulação de um tornado puxando objetos do chão"></canvas>
       <button id="sim-pausa" class="proxima" type="button">⏸ Pausar</button>
+    </section>
+
+    <section id="historia">
+      <h2>Tornados que marcaram a história</h2>
+      <div id="linha-do-tempo"></div>
+    </section>
+
+    <section id="regioes">
+      <h2>Os tornados mais fortes de cada região</h2>
+      <p>
+        O tornado mais forte (ou mais devastador) conhecido em cada parte do mundo. Os mais antigos foram
+        classificados depois, a partir dos estragos, então as categorias são estimativas e podem mudar conforme a fonte.
+        Não há registros na Antártida.
+      </p>
+      <div id="regioes-lista" class="regioes"></div>
     </section>
 
     <section id="radar">
@@ -184,21 +199,6 @@
         Os níveis de risco do radar deste site (Baixo, Atenção, Moderado e Alto) são uma estimativa nossa
         a partir da previsão e não são alertas oficiais. Em caso de dúvida, siga sempre a Defesa Civil.
       </p>
-    </section>
-
-    <section id="historia">
-      <h2>Tornados que marcaram a história</h2>
-      <div id="linha-do-tempo"></div>
-    </section>
-
-    <section id="regioes">
-      <h2>Os tornados mais fortes de cada região</h2>
-      <p>
-        O tornado mais forte (ou mais devastador) conhecido em cada parte do mundo. Os mais antigos foram
-        classificados depois, a partir dos estragos, então as categorias são estimativas e podem mudar conforme a fonte.
-        Não há registros na Antártida.
-      </p>
-      <div id="regioes-lista" class="regioes"></div>
     </section>
 
     <section id="galeria">
