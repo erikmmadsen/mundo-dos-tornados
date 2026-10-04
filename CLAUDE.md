@@ -32,6 +32,7 @@ Site estático em português (pt-BR), "Mundo dos Tornados": explica como os torn
 - Branch `feat/erikmm_atualiza-historico_20261003`: este histórico atualizado após o merge. **Incorporada à `main`.**
 
 Tudo acima foi incorporado à `main` por fast-forward (sem repositório remoto; o "deploy" é local). A branch `claude-md-historico` ficou como cópia: o `CLAUDE.md` já entrou na `main` via o commit equivalente da cadeia.
+- Branch `feat/erikmm_radar-area-maior_20261004` (a partir da `main`): **radar cobre área maior.** Grade 9x9 com passo de 1,5° (~1300 km, antes 7x7 com 1°, ~660 km, que aparecia como um quadrado pequeno no mapa) e o mapa agora enquadra a grade com `fitBounds`. **Ainda não incorporada à `main`.**
 
 ### Estado das branches
 
