@@ -1,9 +1,11 @@
 // ---------- Radar do tempo: previsão de 3 dias ----------
-// Dados reais do Open-Meteo (gratuito, sem chave). Pedimos uma grade de pontos ao redor
-// da cidade e desenhamos a previsão hora a hora sobre um mapa.
+// Dados reais do Open-Meteo (gratuito, sem chave). Pedimos uma grade de pontos que cobre
+// toda a área visível do mapa (com margem) e desenhamos a previsão hora a hora sobre ele.
+// Ao arrastar ou dar zoom, a grade é pedida de novo para a nova área.
 
-const GRADE = 9;            // 9 x 9 pontos
-const PASSO = 1.5;          // graus entre pontos (cerca de 165 km); a grade cobre ~1300 km
+const COLS = 10;            // pontos da grade na horizontal
+const ROWS = 7;             // pontos da grade na vertical
+const MARGEM = 0.25;        // fração extra além da área visível, para o arrasto curto não mostrar borda
 const HORAS = 72;           // 3 dias
 
 const radarStatusEl = document.getElementById("radar-status");
@@ -24,7 +26,11 @@ const camadasRadar = [
 ];
 
 let camadaAtual = camadasRadar[0];
-let previsao = null;        // { horas: [...], pontos: [...], lat, lon, nome }
+let previsao = null;        // { horas, pontos (grade), cidade: { lat, lon, nome, h }, limites }
+let cidade = null;          // lugar pesquisado: { lat, lon, nome }
+let ultimaChave = "";       // área da última grade pedida (evita pedidos repetidos)
+let requisicao = 0;         // descarta respostas antigas
+let adiar = null;
 let mapa = null;
 let overlay = null;
 let marcador = null;
@@ -54,22 +60,45 @@ function desenharLegenda() {
 }
 
 // ---- dados ----
-function listaDePontos(lat, lon) {
+function envolverLon(lon) {
+  return ((lon + 540) % 360) - 180;
+}
+
+// Grade COLS x ROWS sobre a área. As linhas ficam espaçadas na projeção do mapa (Mercator),
+// que é como o Leaflet estica a imagem entre os cantos.
+function listaDePontos(sul, norte, oeste, leste) {
+  const proj = L.Projection.SphericalMercator;
+  const ySul = proj.project(L.latLng(sul, 0)).y;
+  const yNorte = proj.project(L.latLng(norte, 0)).y;
   const lats = [];
   const lons = [];
-  const meio = (GRADE - 1) / 2;
-  for (let i = 0; i < GRADE; i++) {            // i = 0 é o norte
-    for (let j = 0; j < GRADE; j++) {
-      lats.push(+(lat + (meio - i) * PASSO).toFixed(3));
-      lons.push(+(lon + (j - meio) * PASSO).toFixed(3));
+  for (let i = 0; i < ROWS; i++) {            // i = 0 é o norte
+    const lat = proj.unproject(L.point(0, yNorte + (ySul - yNorte) * i / (ROWS - 1))).lat;
+    for (let j = 0; j < COLS; j++) {
+      lats.push(+lat.toFixed(3));
+      lons.push(+envolverLon(oeste + (leste - oeste) * j / (COLS - 1)).toFixed(3));
     }
   }
   return { lats: lats, lons: lons };
 }
 
-async function buscarPrevisao(lat, lon, nome) {
-  radarStatusEl.textContent = "Carregando previsão para " + nome + "...";
-  const p = listaDePontos(lat, lon);
+// Pede a grade da área visível (mais a cidade pesquisada, para o resumo por dia).
+// nova = true quando é uma cidade nova: reinicia a hora e o resumo.
+async function carregarGrade(nova) {
+  if (!mapa || !cidade) return;
+  const b = mapa.getBounds().pad(MARGEM);
+  const sul = Math.max(-80, b.getSouth());
+  const norte = Math.min(80, b.getNorth());
+  const oeste = b.getWest();
+  const leste = b.getEast();
+  const chave = [sul, norte, oeste, leste].map(function (v) { return v.toFixed(2); }).join(",") + "|" + cidade.lat + "," + cidade.lon;
+  if (chave === ultimaChave) return;
+  ultimaChave = chave;
+  const minha = ++requisicao;
+
+  const p = listaDePontos(sul, norte, oeste, leste);
+  p.lats.push(cidade.lat);
+  p.lons.push(cidade.lon);
   const url = "https://api.open-meteo.com/v1/forecast" +
     "?latitude=" + p.lats.join(",") + "&longitude=" + p.lons.join(",") +
     "&hourly=precipitation,wind_gusts_10m,wind_speed_10m,wind_direction_10m,cape,temperature_2m" +
@@ -79,53 +108,75 @@ async function buscarPrevisao(lat, lon, nome) {
     if (!resp.ok) throw new Error("HTTP " + resp.status);
     let dados = await resp.json();
     if (!Array.isArray(dados)) dados = [dados];
+    if (minha !== requisicao) return;           // chegou uma resposta mais nova
+    const total = ROWS * COLS;
+    const pontos = dados.slice(0, total).map(function (d, k) {
+      return { lat: p.lats[k], lon: p.lons[k], h: d.hourly };
+    });
+    const eu = dados[total];
     previsao = {
-      lat: lat, lon: lon, nome: nome,
-      horas: dados[0].hourly.time.slice(0, HORAS),
-      pontos: dados.map(function (d, k) {
-        return { lat: p.lats[k], lon: p.lons[k], h: d.hourly };
-      }),
-      deslocamento: dados[0].utc_offset_seconds || 0
+      cidade: { lat: cidade.lat, lon: cidade.lon, nome: cidade.nome, h: eu.hourly },
+      horas: eu.hourly.time.slice(0, HORAS),
+      pontos: pontos,
+      limites: [[sul, oeste], [norte, leste]],
+      deslocamento: eu.utc_offset_seconds || 0
     };
-    radarStatusEl.textContent = "Previsão para " + nome + " (atualizada agora).";
-    iniciarRadar();
+    radarStatusEl.textContent = "Previsão para " + cidade.nome + " (atualizada agora).";
+    mostrarGrade(nova);
   } catch (erro) {
-    radarStatusEl.textContent = "Não foi possível carregar a previsão. Verifique a internet e tente de novo.";
+    if (minha !== requisicao) return;
+    ultimaChave = "";
+    radarStatusEl.textContent = previsao
+      ? "Não foi possível atualizar esta área do mapa. Mexa no mapa para tentar de novo."
+      : "Não foi possível carregar a previsão. Verifique a internet e tente de novo.";
   }
+}
+
+function buscarPrevisao(lat, lon, nome) {
+  if (typeof L === "undefined") return;
+  cidade = { lat: lat, lon: lon, nome: nome };
+  radarStatusEl.textContent = "Carregando previsão para " + nome + "...";
+  criarMapa();
+  ultimaChave = "";
+  mapa.setView([lat, lon], 6, { animate: false });
+  if (marcador) mapa.removeLayer(marcador);
+  marcador = L.marker([lat, lon]).addTo(mapa).bindPopup(nome);
+  carregarGrade(true);
 }
 
 // ---- desenho no mapa ----
 function valorNaGrade(campo, hora, x, y) {
-  // x, y em [0, GRADE - 1]; interpolação bilinear entre os 4 pontos vizinhos
-  const x0 = Math.min(Math.floor(x), GRADE - 2);
-  const y0 = Math.min(Math.floor(y), GRADE - 2);
+  // x em [0, COLS - 1], y em [0, ROWS - 1]; interpolação entre os 4 pontos vizinhos
+  const x0 = Math.min(Math.floor(x), COLS - 2);
+  const y0 = Math.min(Math.floor(y), ROWS - 2);
   // interpolação suave (cosseno), evita o aspecto quadriculado
   const fx = (1 - Math.cos((x - x0) * Math.PI)) / 2;
   const fy = (1 - Math.cos((y - y0) * Math.PI)) / 2;
-  function v(i, j) { return previsao.pontos[i * GRADE + j].h[campo][hora] || 0; }
+  function v(i, j) { return previsao.pontos[i * COLS + j].h[campo][hora] || 0; }
   return v(y0, x0) * (1 - fx) * (1 - fy) + v(y0, x0 + 1) * fx * (1 - fy) +
     v(y0 + 1, x0) * (1 - fx) * fy + v(y0 + 1, x0 + 1) * fx * fy;
 }
 
-const RES = 128;
+const RES_X = 240;
+const RES_Y = 120;
 const canvasRadar = document.createElement("canvas");
-canvasRadar.width = RES;
-canvasRadar.height = RES;
+canvasRadar.width = RES_X;
+canvasRadar.height = RES_Y;
 
 function desenharHora(hora) {
   if (!previsao || !mapa) return;
   const c = canvasRadar.getContext("2d");
-  const img = c.createImageData(RES, RES);
-  for (let py = 0; py < RES; py++) {
-    for (let px = 0; px < RES; px++) {
-      const v = valorNaGrade(camadaAtual.campo, hora, px / (RES - 1) * (GRADE - 1), py / (RES - 1) * (GRADE - 1));
+  const img = c.createImageData(RES_X, RES_Y);
+  for (let py = 0; py < RES_Y; py++) {
+    for (let px = 0; px < RES_X; px++) {
+      const v = valorNaGrade(camadaAtual.campo, hora, px / (RES_X - 1) * (COLS - 1), py / (RES_Y - 1) * (ROWS - 1));
       const cor = corDoValor(camadaAtual, v);
-      const k = (py * RES + px) * 4;
+      const k = (py * RES_X + px) * 4;
       if (cor) {
         // transparência cresce com a intensidade e some perto das bordas da grade
         const lim = camadaAtual.faixas[0][0];
         const rampa = Math.min(1, (v - lim) / (lim * 1.5) + 0.25);
-        const borda = Math.min(1, Math.min(px, py, RES - 1 - px, RES - 1 - py) / (RES * 0.16));
+        const borda = Math.min(1, Math.min(px, py, RES_X - 1 - px, RES_Y - 1 - py) / (RES_Y * 0.08));
         img.data[k] = cor[0]; img.data[k + 1] = cor[1]; img.data[k + 2] = cor[2];
         img.data[k + 3] = Math.round(185 * rampa * borda * borda);
       }
@@ -167,7 +218,7 @@ function horaAtual() {
   return i >= 0 ? i : 0;
 }
 
-// ---- resumo por dia (ponto central da grade) ----
+// ---- resumo por dia (cidade pesquisada) ----
 function nivelDeRisco(cape, rajada) {
   if (cape >= 2000 && rajada >= 70) return { texto: "⚠️ Alto: tempestades severas possíveis", cor: "#e74c3c" };
   if (cape >= 1000 && rajada >= 60) return { texto: "🟠 Moderado: pancadas fortes", cor: "#e67e22" };
@@ -177,14 +228,14 @@ function nivelDeRisco(cape, rajada) {
 
 // hora (e valor) do maior valor de um campo dentro do dia
 function picoDoDia(campo, ini) {
-  const fatia = previsao.pontos[Math.floor(previsao.pontos.length / 2)].h[campo].slice(ini, ini + 24);
+  const fatia = previsao.cidade.h[campo].slice(ini, ini + 24);
   let melhor = 0;
   fatia.forEach(function (v, i) { if (v > fatia[melhor]) melhor = i; });
   return { valor: fatia[melhor] || 0, hora: ini + melhor };
 }
 
 function desenharResumo() {
-  const centro = previsao.pontos[Math.floor(previsao.pontos.length / 2)].h;
+  const centro = previsao.cidade.h;
   radarResumoEl.innerHTML = "";
   for (let d = 0; d < 3; d++) {
     const ini = d * 24;
@@ -213,27 +264,29 @@ function desenharResumo() {
 }
 
 // ---- mapa e controles ----
-function iniciarRadar() {
-  const meio = (GRADE - 1) / 2 * PASSO;
-  const limites = [[previsao.lat - meio, previsao.lon - meio], [previsao.lat + meio, previsao.lon + meio]];
+function criarMapa() {
+  if (mapa) return;
+  mapa = L.map("radar-mapa", { scrollWheelZoom: false, minZoom: 5 });
+  L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}", {
+    attribution: "Tiles © Esri", maxZoom: 12
+  }).addTo(mapa);
+  setasLayer = L.layerGroup().addTo(mapa);
+  // ao arrastar ou dar zoom, pede a previsão da nova área (com um pequeno atraso)
+  mapa.on("moveend", function () {
+    clearTimeout(adiar);
+    adiar = setTimeout(function () { carregarGrade(false); }, 700);
+  });
+}
 
-  if (!mapa) {
-    mapa = L.map("radar-mapa", { scrollWheelZoom: false });
-    L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}", {
-      attribution: "Tiles © Esri", maxZoom: 12
-    }).addTo(mapa);
-    setasLayer = L.layerGroup().addTo(mapa);
+function mostrarGrade(nova) {
+  if (!overlay) overlay = L.imageOverlay(canvasRadar.toDataURL(), previsao.limites, { opacity: 1 }).addTo(mapa);
+  else overlay.setBounds(previsao.limites);
+  if (nova) {
+    radarHoraEl.max = previsao.horas.length - 1;
+    radarHoraEl.value = horaAtual();
+    desenharLegenda();
+    desenharResumo();
   }
-  mapa.fitBounds(limites);
-  if (overlay) mapa.removeLayer(overlay);
-  overlay = L.imageOverlay(canvasRadar.toDataURL(), limites, { opacity: 1 }).addTo(mapa);
-  if (marcador) mapa.removeLayer(marcador);
-  marcador = L.marker([previsao.lat, previsao.lon]).addTo(mapa).bindPopup(previsao.nome);
-
-  radarHoraEl.max = previsao.horas.length - 1;
-  radarHoraEl.value = horaAtual();
-  desenharLegenda();
-  desenharResumo();
   desenharHora(+radarHoraEl.value);
 }
 
