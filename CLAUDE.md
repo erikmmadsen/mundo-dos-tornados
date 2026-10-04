@@ -7,6 +7,7 @@ Site estático em português (pt-BR), "Mundo dos Tornados": explica como os torn
 - `index.html`: página única com as seções (o-que-e, categorias, simulador, radar, historia, galeria, quiz, curiosidades).
 - `style.css`: estilos.
 - `script.js`: dados (categorias, tornados históricos, fotos, perguntas), simulador e a renderização das seções.
+- `galeria.js`: seção `#galeria`, carrossel (scroll-snap) com filtros por tipo (campo `tipos` de cada foto em `script.js`), miniaturas, barra de progresso e visualizador em `<dialog>` com setas, teclado e swipe.
 - `radar.js`: seção `#radar`, previsão real de 3 dias (chuva, vento, CAPE) via Open-Meteo, desenhada sobre mapa Leaflet (CDN cdnjs, tiles Esri Light Gray, sem chave; CARTO e OSM não servem: pedem chave/referer). Precisa de internet.
 - `imagens/`: `supercelula.webp`, `tornado-campo.jpg`, `tornado-formacao.webp` e `galeria/` (26 fotos reais de tornados em WebP, máx. 1600 px, ~3,5 MB; autores e licenças em `imagens/CREDITOS.md`).
 
@@ -32,6 +33,7 @@ Site estático em português (pt-BR), "Mundo dos Tornados": explica como os torn
 - Branch `feat/erikmm_atualiza-historico_20261003`: este histórico atualizado após o merge. **Incorporada à `main`.**
 
 Tudo acima foi incorporado à `main` por fast-forward (sem repositório remoto; o "deploy" é local). A branch `claude-md-historico` ficou como cópia: o `CLAUDE.md` já entrou na `main` via o commit equivalente da cadeia.
+- Branch `feat/erikmm_galeria-carrossel_20261003`: **galeria moderna.** Carrossel cinematográfico com deslize lateral (scroll-snap, arrastar com mouse, setas e teclado), chips de filtro por tipo (Fracos, Fortes, Landspout/tromba-d'água, Formação, Danos, Brasil), miniaturas e barra de progresso; clique na foto em destaque abre popup (`<dialog>`) com anterior/próxima, contador, ESC, clique no fundo, swipe e pré-carga da vizinha. Respeita `prefers-reduced-motion` (usa `behavior: "instant"`, pois `"auto"` herdaria o `scroll-behavior: smooth` do CSS). **Ainda não incorporada à `main`.**
 
 ### Estado das branches
 
@@ -49,6 +51,7 @@ Tudo acima foi incorporado à `main` por fast-forward (sem repositório remoto; 
 | `feat/erikmm_galeria-30-fotos-reais_20261003` | tudo acima + galeria com 26 fotos reais | sim |
 | `feat/erikmm_galeria-30-fotos-reais_20261003` | + galeria com fotos reais e correção do script | sim |
 | `feat/erikmm_atualiza-historico_20261003` | histórico atualizado | sim |
+| `feat/erikmm_galeria-carrossel_20261003` | galeria em carrossel com filtros e popup | não |
 
 Atualizar esta seção a cada nova alteração.
 
