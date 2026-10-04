@@ -55,8 +55,8 @@ Tudo abaixo entrou na `main` por pull request (merge commit). As branches foram 
 | #15 | #16 | Seção `#alertas`: alertas amarelo, laranja e vermelho (risco, referência de vento e chuva, o que significa e o que fazer, com triângulos SVG feitos em `trianguloAlerta`) e alertas de celular (severo e extremo, SMS 40199, telefone 199). Tornado não tem cor própria: entra nos alertas de tempestade. Não é o logotipo oficial. |
 | #17 | #18 | Seções e menu em ordem lógica. |
 | #19 | #21 | Seções agrupadas em 5 conjuntos temáticos, com cabeçalho, atalhos e menu por tema. (O #20 foi mesclado por engano na branch `ordem-secoes`, sem base `main`; o #21 levou a mesma mudança para a `main`.) |
-| (sem issue) | (a abrir) | Organização das pastas: `style.css` em `css/`; `script.js`, `radar.js` e `galeria.js` em `js/`; as 3 imagens soltas em `imagens/hero/` (campo `arquivo` de `fotos` passou a `hero/...`); rascunhos `pr-*.md` em `rascunhos-pr/` (ignorada pelo Git). Sem mudança de comportamento. |
-| (sem issue) | (a abrir) | Revisão como usuário final (teste no Chrome, desktop e celular; sem erros de JS nem overflow): bandeira do Brasil virou 📍 (emoji de bandeira não renderiza no Windows); `id` duplicado do degradê dos triângulos de alerta corrigido; busca vazia no radar pede o nome da cidade; quiz com a fonte do site e foco na "Próxima" após responder (teclado). |
+| #24 | #25 | Organização das pastas: `style.css` em `css/`; `script.js`, `radar.js` e `galeria.js` em `js/`; as 3 imagens soltas em `imagens/hero/` (campo `arquivo` de `fotos` passou a `hero/...`); rascunhos `pr-*.md` em `rascunhos-pr/` (ignorada pelo Git). Sem mudança de comportamento. |
+| #24 | #25 | Revisão como usuário final (teste no Chrome, desktop e celular; sem erros de JS nem overflow): bandeira do Brasil virou 📍 (emoji de bandeira não renderiza no Windows); `id` duplicado do degradê dos triângulos de alerta corrigido; busca vazia no radar pede o nome da cidade; quiz com a fonte do site e foco na "Próxima" após responder (teclado). |
 
 O site está publicado no GitHub Pages, a partir da `main`. Repositório com descrição, link do site e topics no "About".
 
