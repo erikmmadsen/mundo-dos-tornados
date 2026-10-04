@@ -1,11 +1,11 @@
 // ---------- Radar do tempo: previsão de 3 dias ----------
 // Dados reais do Open-Meteo (gratuito, sem chave). Pedimos uma grade de pontos que cobre
-// toda a área visível do mapa (com margem) e desenhamos a previsão hora a hora sobre ele.
-// Ao arrastar ou dar zoom, a grade é pedida de novo para a nova área.
+// toda a área visível do mapa e desenhamos a previsão hora a hora sobre ele.
+// O mapa fica travado no lugar pesquisado (sem arrastar nem zoom): é um único pedido de
+// dados por busca, o que economiza internet.
 
 const COLS = 10;            // pontos da grade na horizontal
 const ROWS = 7;             // pontos da grade na vertical
-const MARGEM = 0.25;        // fração extra além da área visível, para o arrasto curto não mostrar borda
 const HORAS = 72;           // 3 dias
 
 const radarStatusEl = document.getElementById("radar-status");
@@ -28,9 +28,7 @@ const camadasRadar = [
 let camadaAtual = camadasRadar[0];
 let previsao = null;        // { horas, pontos (grade), cidade: { lat, lon, nome, h }, limites }
 let cidade = null;          // lugar pesquisado: { lat, lon, nome }
-let ultimaChave = "";       // área da última grade pedida (evita pedidos repetidos)
 let requisicao = 0;         // descarta respostas antigas
-let adiar = null;
 let mapa = null;
 let overlay = null;
 let marcador = null;
@@ -83,17 +81,13 @@ function listaDePontos(sul, norte, oeste, leste) {
 }
 
 // Pede a grade da área visível (mais a cidade pesquisada, para o resumo por dia).
-// nova = true quando é uma cidade nova: reinicia a hora e o resumo.
-async function carregarGrade(nova) {
+async function carregarGrade() {
   if (!mapa || !cidade) return;
-  const b = mapa.getBounds().pad(MARGEM);
+  const b = mapa.getBounds();
   const sul = Math.max(-80, b.getSouth());
   const norte = Math.min(80, b.getNorth());
   const oeste = b.getWest();
   const leste = b.getEast();
-  const chave = [sul, norte, oeste, leste].map(function (v) { return v.toFixed(2); }).join(",") + "|" + cidade.lat + "," + cidade.lon;
-  if (chave === ultimaChave) return;
-  ultimaChave = chave;
   const minha = ++requisicao;
 
   const p = listaDePontos(sul, norte, oeste, leste);
@@ -122,13 +116,10 @@ async function carregarGrade(nova) {
       deslocamento: eu.utc_offset_seconds || 0
     };
     radarStatusEl.textContent = "Previsão para " + cidade.nome + " (atualizada agora).";
-    mostrarGrade(nova);
+    mostrarGrade();
   } catch (erro) {
     if (minha !== requisicao) return;
-    ultimaChave = "";
-    radarStatusEl.textContent = previsao
-      ? "Não foi possível atualizar esta área do mapa. Mexa no mapa para tentar de novo."
-      : "Não foi possível carregar a previsão. Verifique a internet e tente de novo.";
+    radarStatusEl.textContent = "Não foi possível carregar a previsão. Verifique a internet e tente de novo.";
   }
 }
 
@@ -137,11 +128,10 @@ function buscarPrevisao(lat, lon, nome) {
   cidade = { lat: lat, lon: lon, nome: nome };
   radarStatusEl.textContent = "Carregando previsão para " + nome + "...";
   criarMapa();
-  ultimaChave = "";
   mapa.setView([lat, lon], 6, { animate: false });
   if (marcador) mapa.removeLayer(marcador);
   marcador = L.marker([lat, lon]).addTo(mapa).bindPopup(nome);
-  carregarGrade(true);
+  carregarGrade();
 }
 
 // ---- desenho no mapa ----
@@ -266,27 +256,24 @@ function desenharResumo() {
 // ---- mapa e controles ----
 function criarMapa() {
   if (mapa) return;
-  mapa = L.map("radar-mapa", { scrollWheelZoom: false, minZoom: 5 });
+  // travado: sem arrastar, zoom, teclado nem botões de zoom
+  mapa = L.map("radar-mapa", {
+    zoomControl: false, dragging: false, scrollWheelZoom: false, doubleClickZoom: false,
+    boxZoom: false, keyboard: false, touchZoom: false, zoomSnap: 0
+  });
   L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}", {
     attribution: "Tiles © Esri", maxZoom: 12
   }).addTo(mapa);
   setasLayer = L.layerGroup().addTo(mapa);
-  // ao arrastar ou dar zoom, pede a previsão da nova área (com um pequeno atraso)
-  mapa.on("moveend", function () {
-    clearTimeout(adiar);
-    adiar = setTimeout(function () { carregarGrade(false); }, 700);
-  });
 }
 
-function mostrarGrade(nova) {
+function mostrarGrade() {
   if (!overlay) overlay = L.imageOverlay(canvasRadar.toDataURL(), previsao.limites, { opacity: 1 }).addTo(mapa);
   else overlay.setBounds(previsao.limites);
-  if (nova) {
-    radarHoraEl.max = previsao.horas.length - 1;
-    radarHoraEl.value = horaAtual();
-    desenharLegenda();
-    desenharResumo();
-  }
+  radarHoraEl.max = previsao.horas.length - 1;
+  radarHoraEl.value = horaAtual();
+  desenharLegenda();
+  desenharResumo();
   desenharHora(+radarHoraEl.value);
 }
 
