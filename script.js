@@ -58,15 +58,15 @@ const regioes = [
 // Alertas de tempestade (cores do INMET/Defesa Civil) e alertas no celular da Defesa Civil.
 // Limites de vento e chuva são referências gerais; os valores exatos variam por região.
 const alertasCores = [
-  { simbolo: "⚠", cor: "#f1c40f", texto: "#1c2833", nome: "Amarelo", grau: "Perigo potencial", risco: "Baixo a moderado",
+  { triangulo: "amarelo", cor: "#f1c40f", texto: "#1c2833", nome: "Amarelo", grau: "Perigo potencial", risco: "Baixo a moderado",
     fenomeno: "Ventos de 40 a 60 km/h e chuva de 20 a 30 mm/h (ou até 50 mm no dia).",
     significa: "Pode haver transtornos pontuais, como queda de galhos e alagamentos localizados, com pouca chance de danos graves.",
     fazer: "Acompanhe a previsão, evite ficar debaixo de árvores e cuide de objetos soltos." },
-  { simbolo: "⚠", cor: "#e67e22", texto: "#1c2833", nome: "Laranja", grau: "Perigo", risco: "Alto",
+  { triangulo: "laranja", cor: "#e67e22", texto: "#1c2833", nome: "Laranja", grau: "Perigo", risco: "Alto",
     fenomeno: "Ventos de 60 a 100 km/h e chuva de 30 a 60 mm/h (ou 50 a 100 mm no dia).",
     significa: "Há risco de enxurradas, queda de árvores e postes, destelhamento e falta de energia.",
     fazer: "Evite sair, fique longe de árvores, postes e áreas alagáveis, e guarde o que o vento puder levar." },
-  { simbolo: "⚠", cor: "#e74c3c", texto: "#ffffff", nome: "Vermelho", grau: "Grande perigo", risco: "Muito alto",
+  { triangulo: "vermelho", cor: "#e74c3c", texto: "#ffffff", nome: "Vermelho", grau: "Grande perigo", risco: "Muito alto",
     fenomeno: "Ventos acima de 100 km/h e chuva acima de 100 mm no dia.",
     significa: "Tempestade de intensidade excepcional, com risco alto de danos em construções, deslizamentos e inundações. Pode incluir tornados.",
     fazer: "Procure abrigo seguro e não saia. Em risco de tornado, vá para um cômodo interno, sem janelas, no andar mais baixo. Siga as ordens da Defesa Civil." }
@@ -399,12 +399,30 @@ historia.forEach(function (ev) {
 });
 
 // Mostra os alertas da Defesa Civil
+// Triângulo de alerta em SVG (amarelo com borda escura, laranja com degradê, vermelho liso)
+function trianguloAlerta(tipo) {
+  const t = {
+    amarelo: { fill: "#ffee00", borda: "#333333", larg: 9, marca: "#333333" },
+    laranja: { fill: "url(#grad-alerta-laranja)", borda: "#f08a1c", larg: 8, marca: "#5a2a0a" },
+    vermelho: { fill: "#ff0000", borda: "#ff0000", larg: 10, marca: "#ffffff" }
+  }[tipo];
+  return '<svg viewBox="0 0 100 90" width="52" height="47" aria-hidden="true">' +
+    '<defs><linearGradient id="grad-alerta-laranja" x1="0" y1="0" x2="0" y2="1">' +
+    '<stop offset="0" stop-color="#ff9a2e"/><stop offset="1" stop-color="#e8590c"/></linearGradient></defs>' +
+    '<polygon points="50,14 88,78 12,78" fill="' + t.fill + '" stroke="' + t.borda + '" stroke-width="' + t.larg + '" stroke-linejoin="round"/>' +
+    '<rect x="45.5" y="37" width="9" height="22" rx="4.5" fill="' + t.marca + '"/>' +
+    '<circle cx="50" cy="67" r="4.8" fill="' + t.marca + '"/></svg>';
+}
+
 function criarAlerta(a, comGrau) {
   const div = document.createElement("article");
   div.className = "alerta";
   div.style.borderLeftColor = a.cor;
   div.innerHTML =
-    '<div class="alerta-topo"><span class="alerta-selo" aria-hidden="true" style="background:' + a.cor + ";color:" + a.texto + '">' + a.simbolo + "</span>" +
+    '<div class="alerta-topo">' +
+    (a.triangulo
+      ? '<span class="alerta-selo triangulo">' + trianguloAlerta(a.triangulo) + "</span>"
+      : '<span class="alerta-selo" aria-hidden="true" style="background:' + a.cor + ";color:" + a.texto + '">' + a.simbolo + "</span>") +
     "<div><h4>" + a.nome + (comGrau ? " · " + a.grau : "") + "</h4>" +
     '<span class="alerta-risco">Risco: <strong>' + a.risco + "</strong></span></div></div>" +
     (a.fenomeno ? "<p><strong>Referência:</strong> " + a.fenomeno + "</p>" : "") +
