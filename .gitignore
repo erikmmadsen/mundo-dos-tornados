@@ -1,0 +1,8 @@
+# sistema e editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# rascunhos locais de descrição de PR
+pr-*.md
