@@ -98,6 +98,23 @@ h2 {
   .links a { margin: 0; padding: 10px 0; border-bottom: 1px solid #22344d; }
 }
 
+/* Supercélula e ar quente/frio */
+.passos { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 14px; margin: 18px 0; }
+.passo { background: var(--azul-claro); border-left: 6px solid var(--azul); border-radius: 8px; padding: 14px 16px; }
+.passo span {
+  display: inline-block; width: 28px; height: 28px; line-height: 28px; text-align: center;
+  border-radius: 50%; background: var(--azul); color: white; font-weight: 700;
+}
+.passo h3 { margin: 8px 0 4px; font-size: 1.05rem; color: var(--escuro); }
+.passo p { margin: 0; font-size: 0.95rem; }
+.ar { border-radius: 10px; padding: 16px 18px; }
+.ar h3 { margin: 0 0 6px; color: var(--escuro); }
+.ar p { margin: 0; }
+.ar-quente { background: #fdecea; border-left: 6px solid #e74c3c; }
+.ar-frio { background: #e6f3fb; border-left: 6px solid #3498db; }
+.sequencia { padding-left: 22px; }
+.sequencia li { margin-bottom: 8px; }
+
 .figura { margin: 0; }
 .figura img { width: 100%; border-radius: 10px; display: block; }
 figcaption { font-size: 0.85rem; color: var(--cinza); margin-top: 6px; }
