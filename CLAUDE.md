@@ -1,22 +1,26 @@
 # appTornado
 
-Site estático em português (pt-BR), "Mundo dos Tornados": explica como os tornados se formam, a escala Fujita Melhorada (EF0 a EF5), tornados históricos, galeria, quiz e curiosidades. Projeto de estudo, sem build nem dependências: abrir `index.html` no navegador.
+Site estático em português (pt-BR), "Mundo dos Tornados": explica como os tornados se formam, a escala Fujita Melhorada (EF0 a EF5), tornados históricos, galeria, quiz e curiosidades. Projeto de estudo, sem build nem dependências: abrir `index.html` no navegador. Online (GitHub Pages): https://erikmmadsen.github.io/mundo-dos-tornados/ . Repositório: https://github.com/erikmmadsen/mundo-dos-tornados .
 
 ## Estrutura
 
-- `index.html`: página única com as seções (o-que-e, ar-quente-frio, supercelula, categorias, simulador, historia, regioes, radar, alertas, galeria, quiz, curiosidades).
+- `index.html`: página única, com as seções agrupadas em 5 conjuntos temáticos (`.tema`): Entenda (o-que-e, ar-quente-frio, supercelula), Classificação (categorias, simulador), História (historia, regioes), Prevenção (radar, alertas) e Explore (galeria, quiz, curiosidades). O menu lista os 5 temas.
 - `css/style.css`: estilos.
-- `js/script.js`: dados (categorias, tornados históricos, fotos, perguntas), simulador e a renderização das seções.
+- `js/script.js`: dados (categorias, tornados históricos, regiões, alertas, fotos, perguntas), simulador e a renderização das seções.
 - `js/galeria.js`: seção `#galeria`, carrossel (scroll-snap) com filtros por tipo (campo `tipos` de cada foto em `script.js`), miniaturas, barra de progresso e visualizador em `<dialog>` com setas, teclado e swipe.
-- `js/radar.js`: seção `#radar`, previsão real de 3 dias (chuva, vento, CAPE) via Open-Meteo, desenhada sobre mapa Leaflet (CDN cdnjs, tiles Esri Light Gray, sem chave; CARTO e OSM não servem: pedem chave/referer). Precisa de internet.
 - `js/radar.js`: seção `#radar`, previsão real de 3 dias (chuva, vento, CAPE) via Open-Meteo, cobrindo toda a área visível do mapa, que fica travado na cidade pesquisada (um pedido por busca), e desenhada sobre mapa Leaflet (CDN cdnjs, tiles Esri Light Gray, sem chave; CARTO e OSM não servem: pedem chave/referer). Precisa de internet.
 - `imagens/`: `hero/` (`supercelula.webp`, `tornado-campo.jpg`, `tornado-formacao.webp`) e `galeria/` (26 fotos reais de tornados em WebP, máx. 1600 px, ~3,5 MB; autores e licenças em `imagens/CREDITOS.md`).
+- `README.md`, `.gitignore` e `.github/` (modelos de issue e de pull request).
 - `rascunhos-pr/`: rascunhos locais de descrição de PR (`pr-*.md`), ignorados pelo Git.
 
 ## Convenções
 
 - Código e textos em português; JavaScript simples (sem frameworks).
 - Git: nunca commitar direto na `main`. Cada alteração vai em uma branch nova, criada a partir da `main`, com o nome `feat/erikmm_<descricao>_<yyyyMMdd>` (descrição curta, minúsculas, com hífens; data do dia). Commitar na branch a cada passo. Não fazer merge na `main` sem o usuário pedir.
+- GitHub: cada branch tem uma **issue** (modelos em `.github/ISSUE_TEMPLATE/`) e um **pull request** que a fecha com `Closes #N`, aberto pela skill `personal-github-pr` (descrição em `pr-<nome>.md`, ignorado pelo git). Issues e PRs entram no projeto "Mundo dos Tornados" (https://github.com/users/erikmmadsen/projects/1).
+- PR com base na `main`. Se a branch depende de outra ainda não mesclada, o PR fica empilhado; depois de mesclar a de baixo, **trocar a base do próximo para `main`** (um PR mesclado em outra branch não chega à `main`). Mesclar com merge commit e apagar a branch depois.
+- Remoto: `origin` usa o apelido SSH `github-erik` (`git@github-erik:erikmmadsen/mundo-dos-tornados.git`, chave `~/.ssh/id_ed25519_erikmmadsen`). O `gh` precisa estar com a conta `erikmmadsen` ativa (`gh auth switch --user erikmmadsen`); o caminho é `C:\Program Files\GitHub CLI\gh.exe`.
+- Ao resolver conflito no `CLAUDE.md` (várias branches acrescentam linhas no mesmo ponto), manter as duas versões das linhas.
 
 ## Histórico do projeto
 
@@ -34,48 +38,26 @@ Site estático em português (pt-BR), "Mundo dos Tornados": explica como os torn
 - Branch `feat/erikmm_galeria-30-fotos-reais_20261003`: **galeria com 26 fotos reais** (Wikimedia Commons) e créditos em `imagens/CREDITOS.md`; corrigida uma quebra de linha em string que derrubava o `script.js`. **Incorporada à `main`.**
 - Branch `feat/erikmm_atualiza-historico_20261003`: este histórico atualizado após o merge. **Incorporada à `main`.**
 
-Tudo acima foi incorporado à `main` por fast-forward (sem repositório remoto; o "deploy" é local). A branch `claude-md-historico` ficou como cópia: o `CLAUDE.md` já entrou na `main` via o commit equivalente da cadeia.
-- Branch `feat/erikmm_galeria-carrossel_20261003`: **galeria moderna.** Carrossel cinematográfico com deslize lateral (scroll-snap, arrastar com mouse, setas e teclado), chips de filtro por tipo (Fracos, Fortes, Landspout/tromba-d'água, Formação, Danos, Brasil), miniaturas e barra de progresso; clique na foto em destaque abre popup (`<dialog>`) com anterior/próxima, contador, ESC, clique no fundo, swipe e pré-carga da vizinha. Respeita `prefers-reduced-motion` (usa `behavior: "instant"`, pois `"auto"` herdaria o `scroll-behavior: smooth` do CSS). **Ainda não incorporada à `main`.**
-- Branch `feat/erikmm_supercelula-ar-quente-frio_20261004` (a partir da `main`): **novas seções explicativas.** `#supercelula` (mesociclone, 4 passos, eco em gancho) e `#ar-quente-frio` (ar quente/úmido x ar frio/seco, instabilidade, gatilho, cisalhamento), ambas logo após "O que é um tornado?", com links no menu ("Supercélula" e "Ar quente e frio") e estilos `.passos`, `.ar`, `.sequencia`. **Ainda não incorporada à `main`.**
-- Branch `feat/erikmm_radar-area-maior_20261004` (a partir da `main`): **radar cobre área maior.** Grade 9x9 com passo de 1,5° (~1300 km, antes 7x7 com 1°, ~660 km, que aparecia como um quadrado pequeno no mapa) e o mapa agora enquadra a grade com `fitBounds`. **Ainda não incorporada à `main`.**
-- Branch `feat/erikmm_radar-todo-mapa_20261004` (a partir da branch `radar-area-maior`, da qual depende): **radar cobre todo o mapa visível.** Em vez de uma grade fixa em volta da cidade, a grade 10x7 cobre a área visível do mapa (+25% de margem) e é pedida de novo ao arrastar ou dar zoom (atraso de 700 ms, respostas antigas descartadas, zoom mínimo 5). A cidade pesquisada vai como ponto extra na mesma chamada e alimenta o resumo por dia. Linhas da grade espaçadas na projeção Mercator, como o Leaflet estica a imagem. **Ainda não incorporada à `main`.**
-- Branch `feat/erikmm_radar-mapa-travado_20261004` (a partir da branch `radar-todo-mapa`): **mapa travado no lugar pesquisado, para gastar menos dados.** Sem arrastar, zoom nem botões de zoom; a grade 10x7 cobre a área visível e é pedida **uma vez por busca** (antes recarregava a cada movimento). **Ainda não incorporada à `main`.**
-- Branch `feat/erikmm_galeria-carrossel_20261003`: **galeria moderna.** Carrossel cinematográfico com deslize lateral (scroll-snap, arrastar com mouse, setas e teclado), chips de filtro por tipo (Fracos, Fortes, Landspout/tromba-d'água, Formação, Danos, Brasil), miniaturas e barra de progresso; clique na foto em destaque abre popup (`<dialog>`) com anterior/próxima, contador, ESC, clique no fundo, swipe e pré-carga da vizinha. Respeita `prefers-reduced-motion` (usa `behavior: "instant"`, pois `"auto"` herdaria o `scroll-behavior: smooth` do CSS). **Ainda não incorporada à `main`.**
-- Branch `feat/erikmm_integra-radar-galeria-regioes_20261004` (a partir da branch `supercelula-ar-quente-frio`, com merge das branches `radar-mapa-travado` e `galeria-carrossel`): **junta tudo e acrescenta os tornados mais fortes por região.** Traz o radar de mapa travado, a galeria em carrossel e as seções Supercélula e Ar quente e frio. Nova seção `#regioes` (dados em `regioes` no `script.js`, cards `.regiao`, link "Regiões" no menu) com um tornado por região: América do Norte (Bridge Creek-Moore 1999), América do Sul (San Justo 1973), Brasil (Itu 1991 e Rio Bonito do Iguaçu 2025), Europa (Palluel 1967), Ásia (Daulatpur-Saturia 1989), África (oThongathi 2024), Oceania (Bowen 1876 e Frankton 1948). Classificações antigas são estimativas e variam por fonte. **Ainda não incorporada à `main`.**
-- Branch `feat/erikmm_alertas-defesa-civil_20261004` (a partir da branch `integra-radar-galeria-regioes`): **alertas da Defesa Civil.** Nova seção `#alertas` (após o radar, link "Alertas" no menu) com as três cores (Amarelo/Perigo potencial, Laranja/Perigo, Vermelho/Grande perigo: risco, referência de vento e chuva, o que significa e o que fazer) e os alertas de celular (severo 🔔 e extremo 🚨, SMS 40199, telefone 199). Dados em `alertasCores` e `alertasCelular` no `script.js`; estilos `.alerta*`. Os símbolos das cores são triângulos de alerta em SVG (função `trianguloAlerta` no `script.js`, feitos no estilo das imagens enviadas pelo usuário, sem usar as originais por causa da marca d'água); os de celular são emojis 🔔 e 🚨. Não é o logotipo oficial. Tornado não tem cor própria: entra nos alertas de tempestade. **Ainda não incorporada à `main`.**
-- Branch `feat/erikmm_ordem-secoes_20261004` (a partir da branch `alertas-defesa-civil`): **seções e menu em ordem lógica.** Aprender (O que é, Ar quente e frio, Supercélula), classificar (Categorias, Simulador), história (História, Regiões), prevenção (Radar, Alertas), depois Galeria, Quiz e Curiosidades. Menu na mesma ordem das seções. **Ainda não incorporada à `main`.**
-- Branch `feat/erikmm_organiza-pastas_20261004` (a partir da `main`): **organização das pastas.** `style.css` foi para `css/`; `script.js`, `radar.js` e `galeria.js` para `js/`; as 3 imagens soltas para `imagens/hero/` (o campo `arquivo` em `fotos` passou a `hero/...`); os rascunhos `pr-*.md` para `rascunhos-pr/` (ignorada pelo Git). Sem mudança de comportamento. **Ainda não incorporada à `main`.**
 
-### Estado das branches
+### 2026-10-04
 
-| Branch | Conteúdo | Na `main`? |
+Tudo abaixo entrou na `main` por pull request (merge commit). As branches foram apagadas depois do merge.
+
+| Issue | PR | Conteúdo |
 |---|---|---|
-| `main` | versão inicial | sim |
-| `feat/erikmm_snapshot-versao-atual_20261003` | snapshot da versão inicial (mesmo commit da `main`) | sim |
-| `feat/erikmm_simulador-destruicao_20261003` | simulador de destruição | sim |
-| `feat/erikmm_claude-md-historico_20261003` | `CLAUDE.md` | sim |
-| `feat/erikmm_tornado-cone-radar_20261003` | simulador + `CLAUDE.md` + tornado em cone + radar de mentira | sim |
-| `feat/erikmm_radar-previsao-3dias_20261003` | tudo acima, com o radar real de previsão no lugar do falso | sim |
-| `feat/erikmm_correcoes-ui_20261003` | + correções de UI (contraste, menu mobile, curiosidades) | sim |
-| `feat/erikmm_radar-simulador-melhorias_20261003` | + simulador unificado, pausa, radar suave, risco em 4 níveis | sim |
-| `feat/erikmm_acessibilidade-acabamento_20261003` | + acessibilidade, favicon, hero, sem `teste` | sim |
-| `feat/erikmm_galeria-30-fotos-reais_20261003` | tudo acima + galeria com 26 fotos reais | sim |
-| `feat/erikmm_galeria-30-fotos-reais_20261003` | + galeria com fotos reais e correção do script | sim |
-| `feat/erikmm_atualiza-historico_20261003` | histórico atualizado | sim |
-| `feat/erikmm_supercelula-ar-quente-frio_20261004` | seções Supercélula e Ar quente e frio + menu | não |
-| `feat/erikmm_radar-area-maior_20261004` | radar com grade maior (9x9, 1,5°) e fitBounds | não |
-| `feat/erikmm_radar-todo-mapa_20261004` | grade sobre toda a área visível, recarregando ao mover o mapa | não |
-| `feat/erikmm_radar-mapa-travado_20261004` | mapa travado na cidade pesquisada, um pedido por busca | não |
-| `feat/erikmm_integra-radar-galeria-regioes_20261004` | radar travado + galeria carrossel + supercélula/ar quente e frio + tornados por região | não |
-| `feat/erikmm_alertas-defesa-civil_20261004` | tudo da integração + seção Alertas da Defesa Civil | não |
-| `feat/erikmm_ordem-secoes_20261004` | tudo anterior + seções e menu em ordem lógica | não |
-| `feat/erikmm_organiza-pastas_20261004` | pastas css/, js/, imagens/hero/ e rascunhos-pr/ | não |
-| `feat/erikmm_galeria-carrossel_20261003` | galeria em carrossel com filtros e popup | não |
-| `feat/erikmm_galeria-carrossel_20261003` | galeria em carrossel com filtros e popup | não |
-| `feat/erikmm_radar-area-maior_20261004` | radar com grade maior (9x9, 1,5°) e fitBounds | não |
-| `feat/erikmm_radar-todo-mapa_20261004` | grade sobre toda a área visível, recarregando ao mover o mapa | não |
-| `feat/erikmm_radar-mapa-travado_20261004` | mapa travado na cidade pesquisada, um pedido por busca | não |
-| `feat/erikmm_supercelula-ar-quente-frio_20261004` | seções Supercélula e Ar quente e frio + menu | não |
+| #1 | #2 | `README.md`, `.gitignore` e modelos de issue e de PR em `.github/`. |
+| #3 | #4 | Seções `#supercelula` (mesociclone, 4 passos, eco em gancho) e `#ar-quente-frio` (ar quente/úmido x frio/seco, instabilidade, gatilho, cisalhamento). |
+| #5 | #6 | Radar: grade 9x9 com passo de 1,5° (antes 7x7 com 1°, que aparecia como um quadrado pequeno no mapa) e mapa enquadrado com `fitBounds`. |
+| #7 | #8 | Radar: a grade 10x7 cobre toda a área visível do mapa. Linhas espaçadas na projeção Mercator, como o Leaflet estica a imagem. A cidade pesquisada vai como ponto extra na mesma chamada e alimenta o resumo por dia. |
+| #9 | #10 | Radar: mapa travado na cidade pesquisada (sem arrastar, zoom nem botões de zoom) para gastar menos dados: **um pedido por busca**. |
+| #11 | #12 | Galeria em carrossel (`galeria.js`): scroll-snap, arrastar com mouse, setas e teclado, chips de filtro por tipo, miniaturas, barra de progresso e popup (`<dialog>`) com anterior/próxima, contador, ESC, clique no fundo, swipe e pré-carga da vizinha. Respeita `prefers-reduced-motion` (usa `behavior: "instant"`, pois `"auto"` herdaria o `scroll-behavior: smooth` do CSS). |
+| #13 | #14 | Seção `#regioes`: o tornado mais forte (ou mais devastador) de cada região (dados em `regioes` no `script.js`). As classificações antigas são estimativas e variam por fonte. Também reuniu o radar, a galeria e a supercélula. |
+| #15 | #16 | Seção `#alertas`: alertas amarelo, laranja e vermelho (risco, referência de vento e chuva, o que significa e o que fazer, com triângulos SVG feitos em `trianguloAlerta`) e alertas de celular (severo e extremo, SMS 40199, telefone 199). Tornado não tem cor própria: entra nos alertas de tempestade. Não é o logotipo oficial. |
+| #17 | #18 | Seções e menu em ordem lógica. |
+| #19 | #21 | Seções agrupadas em 5 conjuntos temáticos, com cabeçalho, atalhos e menu por tema. (O #20 foi mesclado por engano na branch `ordem-secoes`, sem base `main`; o #21 levou a mesma mudança para a `main`.) |
+| (sem issue) | (a abrir) | Organização das pastas: `style.css` em `css/`; `script.js`, `radar.js` e `galeria.js` em `js/`; as 3 imagens soltas em `imagens/hero/` (campo `arquivo` de `fotos` passou a `hero/...`); rascunhos `pr-*.md` em `rascunhos-pr/` (ignorada pelo Git). Sem mudança de comportamento. |
+
+O site está publicado no GitHub Pages, a partir da `main`. Repositório com descrição, link do site e topics no "About".
 
 Atualizar esta seção a cada nova alteração.
 
