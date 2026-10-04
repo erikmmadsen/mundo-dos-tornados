@@ -7,7 +7,7 @@ Site estático em português (pt-BR), "Mundo dos Tornados": explica como os torn
 - `index.html`: página única com as seções (o-que-e, categorias, simulador, radar, historia, galeria, quiz, curiosidades).
 - `style.css`: estilos.
 - `script.js`: dados (categorias, tornados históricos, fotos, perguntas), simulador e a renderização das seções.
-- `radar.js`: seção `#radar`, previsão real de 3 dias (chuva, vento, CAPE) via Open-Meteo, desenhada sobre mapa Leaflet (CDN cdnjs, tiles Esri Light Gray, sem chave; CARTO e OSM não servem: pedem chave/referer). Precisa de internet.
+- `radar.js`: seção `#radar`, previsão real de 3 dias (chuva, vento, CAPE) via Open-Meteo, cobrindo toda a área visível do mapa (recarrega ao arrastar/zoom) e desenhada sobre mapa Leaflet (CDN cdnjs, tiles Esri Light Gray, sem chave; CARTO e OSM não servem: pedem chave/referer). Precisa de internet.
 - `imagens/`: `supercelula.webp`, `tornado-campo.jpg`, `tornado-formacao.webp` e `galeria/` (26 fotos reais de tornados em WebP, máx. 1600 px, ~3,5 MB; autores e licenças em `imagens/CREDITOS.md`).
 
 ## Convenções
@@ -33,6 +33,7 @@ Site estático em português (pt-BR), "Mundo dos Tornados": explica como os torn
 
 Tudo acima foi incorporado à `main` por fast-forward (sem repositório remoto; o "deploy" é local). A branch `claude-md-historico` ficou como cópia: o `CLAUDE.md` já entrou na `main` via o commit equivalente da cadeia.
 - Branch `feat/erikmm_radar-area-maior_20261004` (a partir da `main`): **radar cobre área maior.** Grade 9x9 com passo de 1,5° (~1300 km, antes 7x7 com 1°, ~660 km, que aparecia como um quadrado pequeno no mapa) e o mapa agora enquadra a grade com `fitBounds`. **Ainda não incorporada à `main`.**
+- Branch `feat/erikmm_radar-todo-mapa_20261004` (a partir da branch `radar-area-maior`, da qual depende): **radar cobre todo o mapa visível.** Em vez de uma grade fixa em volta da cidade, a grade 10x7 cobre a área visível do mapa (+25% de margem) e é pedida de novo ao arrastar ou dar zoom (atraso de 700 ms, respostas antigas descartadas, zoom mínimo 5). A cidade pesquisada vai como ponto extra na mesma chamada e alimenta o resumo por dia. Linhas da grade espaçadas na projeção Mercator, como o Leaflet estica a imagem. **Ainda não incorporada à `main`.**
 
 ### Estado das branches
 
