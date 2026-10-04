@@ -124,7 +124,6 @@ h2 {
 .regiao-meta strong { color: var(--escuro); }
 .regiao p { margin: 0; font-size: 0.95rem; }
 .regiao p + p { margin-top: 4px; }
-
 .figura { margin: 0; }
 .figura img { width: 100%; border-radius: 10px; display: block; }
 figcaption { font-size: 0.85rem; color: var(--cinza); margin-top: 6px; }
